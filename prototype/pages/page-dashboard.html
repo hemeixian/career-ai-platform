@@ -1,0 +1,276 @@
+<!-- ===== PAGE: 工作台 (DASHBOARD) ===== -->
+        <section id="page-dashboard" class="page active">
+          <!-- Hero -->
+          <div class="card relative overflow-hidden mb-6 stagger">
+            <div class="hero-orb w-64 h-64 -top-20 -right-10" style="background: #6d5ef6;"></div>
+            <div class="hero-orb w-48 h-48 -bottom-16 right-32" style="background: #0ea5b7;"></div>
+            <div class="hero-noise"></div>
+            <div class="relative p-7 flex items-center justify-between gap-6">
+              <div>
+                <div class="eyebrow mb-2">DAILY · BRIEFING</div>
+                <h1 class="font-display font-extrabold text-3xl text-content-text leading-tight"><span id="hero-greeting">早上好</span>，<span id="hero-name">张明</span> <span class="inline-block ml-1">👋</span></h1>
+                <p class="text-content-sub mt-2 text-[15px]">距目标岗位 <span id="hero-target" class="text-brand-purple font-semibold">前端开发工程师</span> 还差 <span id="hero-gap" class="text-brand-cyan font-semibold">27%</span> 匹配度，今日有 <span id="hero-tasks" class="text-content-text font-semibold">3</span> 个待办任务等你解锁。</p>
+              </div>
+              <div class="hidden md:block flex-shrink-0">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=320&h=200&fit=crop" class="w-72 h-36 object-cover rounded-2xl shadow-card-hover" alt="学生工作场景" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar Card (replaces 4-stat row) -->
+          <div class="card glass-card p-6 mb-6 stagger">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="eyebrow mb-1">MATCH · PROGRESS</div>
+                <h3 class="font-display font-bold text-lg text-content-text">距目标岗位进度</h3>
+              </div>
+              <div class="flex items-center gap-1.5 text-sm">
+                <i class="fa-solid fa-arrow-up text-state-success"></i>
+                <span class="text-state-success font-semibold stat-match-delta">+5%</span>
+                <span class="text-content-sub text-xs">较上周</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-5">
+              <div class="font-display font-extrabold text-4xl gradient-text-brand stat-match">0<span class="text-lg text-content-sub">%</span></div>
+              <div class="flex-1">
+                <div class="h-3 rounded-full overflow-hidden" style="background:linear-gradient(90deg,rgba(109,94,246,0.12),rgba(14,165,183,0.12))">
+                  <div class="h-full rounded-full stat-match-bar" style="width:0%;background:linear-gradient(90deg,#6d5ef6,#0ea5b7);transition:width 0.6s cubic-bezier(.16,1,.3,1)"></div>
+                </div>
+                <div class="flex items-center justify-between mt-2 text-xs text-content-sub">
+                  <span class="stat-match-label">首次匹配评估</span>
+                  <span class="stat-match-goal">完成评估即可解锁</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 p-3 rounded-xl" style="background:rgba(109,94,246,0.05)">
+              <p class="text-sm text-content-text">
+                <i class="fa-solid fa-circle-info text-brand-purple mr-1.5"></i>
+                Complete <span class="font-semibold text-brand-purple">first task</span> to get started
+              </p>
+            </div>
+          </div>
+
+          <!-- 2-column stats -->
+          <div class="grid grid-cols-2 gap-5 mb-6 stagger">
+            <div class="card glass-card card-glow-hover p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-content-sub font-medium">已通过任务</span>
+                <i class="fa-solid fa-circle-check text-state-success"></i>
+              </div>
+              <div class="font-display font-extrabold text-3xl gradient-text-brand stat-tasks-done">0<span class="text-lg text-content-sub">/0</span></div>
+              <div class="flex items-center gap-1 mt-2 text-[11px]">
+                <span class="text-content-sub">本周新增</span>
+                <span class="text-content-sub font-semibold stat-tasks-week">待开始</span>
+              </div>
+            </div>
+            <div class="card glass-card card-glow-hover p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-content-sub font-medium">累计学习时长</span>
+                <i class="fa-solid fa-clock text-brand-cyan"></i>
+              </div>
+              <div class="font-display font-extrabold text-3xl gradient-text-brand stat-hours">0<span class="text-lg text-content-sub">h</span></div>
+              <div class="flex items-center gap-1 mt-2 text-[11px]">
+                <span class="text-content-sub">本月新增</span>
+                <span class="text-content-sub font-semibold stat-hours-month">刚开始</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main grid: radar + ring -->
+          <div class="grid grid-cols-3 gap-5 mb-6 stagger">
+            <!-- Radar chart -->
+            <div class="card col-span-2 p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="eyebrow mb-1">RADAR · COMPARE</div>
+                  <h3 class="font-display font-bold text-lg text-content-text">能力雷达图</h3>
+                  <p class="text-xs text-content-sub mt-0.5">当前能力 vs 目标岗位要求</p>
+                </div>
+                <div class="flex items-center gap-4 text-xs">
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:rgba(123,79,224,0.6);border:1px solid #7b4fe0"></span>当前能力</span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:rgba(0,184,212,0.25);border:1px dashed #00b8d4"></span>岗位要求</span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:rgba(16,185,129,0.5);border:1px solid #10b981"></span>已达标</span>
+                </div>
+              </div>
+              <div id="chart-radar" class="fade-in-up" style="height: 320px;"></div>
+              <div class="mt-4 p-4 rounded-xl" style="background:linear-gradient(135deg,rgba(109,94,246,0.06),rgba(14,165,183,0.04));border:1px solid rgba(109,94,246,0.1)">
+                <div class="flex items-start gap-2">
+                  <i class="fa-solid fa-lightbulb text-brand-purple mt-0.5"></i>
+                  <p class="text-sm text-content-text leading-relaxed">
+                    你的<span class="font-semibold text-state-success">"项目经验"</span>超出岗位要求，但<span class="font-semibold text-state-warning">"技术能力"</span>还差一截，建议优先补齐 <span class="font-semibold text-brand-purple">React</span> 和 <span class="font-semibold text-brand-cyan">TS</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ring progress + mini info -->
+            <div class="card p-6 ring-stat flex flex-col">
+              <div class="eyebrow mb-1">PROGRESS · RING</div>
+              <h3 class="font-display font-bold text-lg text-content-text mb-2" id="ring-title">整体达成</h3>
+              <div id="chart-ring" style="height: 200px;" class="flex-1"></div>
+              <div class="grid grid-cols-2 gap-2 mt-3 text-center" id="skill-stats">
+                <div class="rounded-lg py-2" style="background:rgba(16,185,129,0.08)">
+                  <div class="font-display font-bold text-state-success text-lg" id="stat-mastered">8</div>
+                  <div class="text-[10px] text-content-sub">已掌握技能</div>
+                </div>
+                <div class="rounded-lg py-2" style="background:rgba(245,158,11,0.08)">
+                  <div class="font-display font-bold text-state-warning text-lg" id="stat-improve">4</div>
+                  <div class="text-[10px] text-content-sub">待提升技能</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Entry cards: 简历诊断 + 能力提升 -->
+          <div class="grid grid-cols-2 gap-5 mb-6 stagger">
+            <div class="card card-hover p-5 cursor-pointer transition" onclick="switchPage('resume')">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style="background:rgba(109,94,246,0.1)">📄</div>
+                <div class="flex-1">
+                  <div class="font-display font-bold text-base text-content-text">简历诊断</div>
+                  <div class="text-xs text-content-sub mt-0.5">AI 对标岗位生成理想简历，一键补齐差距</div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-content-sub text-sm"></i>
+              </div>
+            </div>
+            <div class="card card-hover p-5 cursor-pointer transition" onclick="switchPage('diagnosis')">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style="background:rgba(14,165,183,0.1)">📈</div>
+                <div class="flex-1">
+                  <div class="font-display font-bold text-base text-content-text">能力提升</div>
+                  <div class="text-xs text-content-sub mt-0.5">五维雷达差距分析，精准定位能力短板</div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-content-sub text-sm"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skill capsule strip -->
+          <div class="card p-5 mb-6 stagger">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="eyebrow mb-1">SKILLS · OVERVIEW</div>
+                <h3 class="font-display font-bold text-base text-content-text">技能图谱</h3>
+              </div>
+              <span class="text-xs text-content-sub">横向滚动查看更多 →</span>
+            </div>
+            <div class="skill-capsules">
+              <span class="skill-capsule active" onclick="switchPage('diagnosis')">React <span class="skill-level">L5</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">TypeScript <span class="skill-level">L3</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">Vue.js <span class="skill-level">L4</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">Node.js <span class="skill-level">L2</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">Webpack/Vite <span class="skill-level">L3</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">CSS3 <span class="skill-level">L5</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">HTML5 <span class="skill-level">L5</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">GraphQL <span class="skill-level">L1</span></span>
+              <span class="skill-capsule" onclick="switchPage('diagnosis')">+12</span>
+            </div>
+          </div>
+
+          <!-- Trend + Todo -->
+          <div class="grid grid-cols-3 gap-5 stagger">
+            <!-- 新用户引导卡片 -->
+            <div id="newuser-welcome" class="card col-span-2 p-0 hidden">
+              <div class="relative overflow-hidden p-7 bg-gradient-to-br from-brand-purple/5 via-brand-cyan/5 to-white">
+                <div class="hero-orb w-40 h-40 -top-10 -right-10" style="background: #6d5ef6; opacity: 0.15;"></div>
+                <div class="hero-orb w-32 h-32 -bottom-12 left-20" style="background: #0ea5b7; opacity: 0.12;"></div>
+                <div class="relative">
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-purple to-brand-cyan flex items-center justify-center text-white text-xl shadow-glow">
+                      <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-display font-bold text-xl text-content-text">开始你的成长之旅 🚀</h3>
+                      <p class="text-sm text-content-sub mt-0.5">完成第一个任务，即可解锁能力追踪和成长曲线</p>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-3 gap-3 mt-5">
+                    <div class="bg-white rounded-xl p-4 border border-content-divider hover:border-brand-purple/50 transition cursor-pointer" onclick="switchPage('diagnosis')">
+                      <div class="w-9 h-9 rounded-lg bg-brand-purple/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-magnifying-glass-chart text-brand-purple"></i>
+                      </div>
+                      <div class="text-sm font-semibold mb-1">1. 技能诊断</div>
+                      <div class="text-[11px] text-content-sub">全面评估你的能力现状</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border border-content-divider hover:border-brand-cyan/50 transition cursor-pointer" onclick="switchPage('planning')">
+                      <div class="w-9 h-9 rounded-lg bg-brand-cyan/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-compass text-brand-cyan"></i>
+                      </div>
+                      <div class="text-sm font-semibold mb-1">2. 职业规划</div>
+                      <div class="text-[11px] text-content-sub">AI 为你定制发展路径</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 border border-content-divider hover:border-state-success/50 transition cursor-pointer" onclick="switchPage('tasks')">
+                      <div class="w-9 h-9 rounded-lg bg-state-success/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-list-check text-state-success"></i>
+                      </div>
+                      <div class="text-sm font-semibold mb-1">3. 开始任务</div>
+                      <div class="text-[11px] text-content-sub">从第一个实战任务起步</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 趋势图（老用户显示） -->
+            <div id="trend-chart-card" class="card col-span-2 p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="eyebrow mb-1">TREND · LINE</div>
+                  <h3 class="font-display font-bold text-lg text-content-text">匹配度趋势</h3>
+                  <p class="text-xs text-content-sub mt-0.5" id="trend-subtitle">近 6 个月匹配度变化曲线</p>
+                </div>
+                <div class="flex gap-1">
+                  <button class="view-tab active text-xs" onclick="switchTrendRange('6m', this)">6 月</button>
+                  <button class="view-tab text-xs" onclick="switchTrendRange('3m', this)">3 月</button>
+                </div>
+              </div>
+              <div id="chart-trend" style="height: 240px;"></div>
+            </div>
+
+            <!-- Todo list -->
+            <div class="card p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="eyebrow mb-1">TODAY · TODO</div>
+                  <h3 class="font-display font-bold text-lg text-content-text" id="todo-title">待办任务</h3>
+                </div>
+                <button class="text-xs text-brand-purple font-semibold hover:underline" onclick="switchPage('tasks')">全部 →</button>
+              </div>
+              <div class="space-y-2.5" id="todo-list">
+                <div id="recent-task-1" class="card-clickable p-3 rounded-xl border border-content-divider hover:border-brand-purple hover:shadow-glow transition" onclick="switchPage('tasks')">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="badge badge-progress" id="task-badge-1">进行中</span>
+                    <span class="text-[10px] text-content-sub">A 类</span>
+                  </div>
+                  <div class="text-sm font-semibold text-content-text recent-task-title-1">完成 React Hooks 实战项目</div>
+                  <div class="text-[11px] text-content-sub mt-1"><i class="fa-regular fa-clock mr-1"></i><span class="recent-task-meta-1">预计 4h · 优先级高</span></div>
+                </div>
+                <div id="recent-task-2" class="card-clickable p-3 rounded-xl border border-content-divider hover:border-brand-purple hover:shadow-glow transition" onclick="switchPage('tasks')">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="badge badge-pending" id="task-badge-2">待开始</span>
+                    <span class="text-[10px] text-content-sub">B 类</span>
+                  </div>
+                  <div class="text-sm font-semibold text-content-text recent-task-title-2">撰写项目复盘总结</div>
+                  <div class="text-[11px] text-content-sub mt-1"><i class="fa-regular fa-clock mr-1"></i><span class="recent-task-meta-2">预计 2h · 优先级中</span></div>
+                </div>
+                <div id="recent-task-3" class="card-clickable p-3 rounded-xl border border-content-divider hover:border-brand-purple hover:shadow-glow transition" onclick="switchPage('tasks')">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="badge badge-verifying" id="task-badge-3">验证中</span>
+                    <span class="text-[10px] text-content-sub">A 类</span>
+                  </div>
+                  <div class="text-sm font-semibold text-content-text recent-task-title-3">TypeScript 类型实战</div>
+                  <div class="text-[11px] text-content-sub mt-1"><i class="fa-regular fa-clock mr-1"></i><span class="recent-task-meta-3">AI 正在评估成果物</span></div>
+                </div>
+              </div>
+              <!-- 新用户空状态引导 -->
+              <div id="newuser-todo-empty" class="hidden text-center py-6">
+                <div class="w-14 h-14 mx-auto rounded-full bg-brand-purple/10 flex items-center justify-center mb-3">
+                  <i class="fa-solid fa-flag text-brand-purple text-xl"></i>
+                </div>
+                <p class="text-sm text-content-sub mb-3">还没有开始任何任务</p>
+                <button class="btn-primary px-4 py-2 rounded-lg text-xs" onclick="switchPage('tasks')">
+                  <i class="fa-solid fa-play mr-1.5"></i>开启第一个任务
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
