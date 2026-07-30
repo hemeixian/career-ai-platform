@@ -1,11 +1,6 @@
 {
-  "buildCommand": "npm install",
-  "devCommand": "node server.js",
-  "installCommand": "npm install",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "buildCommand": "npm install",
+  "installCommand": "npm install"
 }
