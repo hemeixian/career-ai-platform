@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: zhiyin-ai-server
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: api_key
+        sync: false
+      - key: base_url
+        sync: false
+      - key: model
+        sync: false
+    autoDeploy: true
