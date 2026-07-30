@@ -5755,8 +5755,9 @@ ${r.skills.length ? `<h2>技能清单</h2><div class="skills">${r.skills.map(s =
         + '可以适当使用emoji，但不要过多。如果用户问的问题超出职业规划范围，可以礼貌引导回来。';
     }
 
-    // 代理服务器地址（启动 server.js 后自动使用，Key 不暴露在前端）
-    const PROXY_URL = 'http://localhost:3456';
+    // 代理服务器地址（支持动态配置）
+    // 部署后可通过 window.__AI_PROXY_URL 或 localStorage 设置后端地址
+    const PROXY_URL = window.__AI_PROXY_URL || localStorage.getItem('aiProxyUrl') || 'https://zhiyin-ai-server-psne48ksc-career-feature.vercel.app';
     let proxyAvailable = false;
 
     async function checkProxy() {
