@@ -1,0 +1,183 @@
+        <!-- ===== PAGE: 职业规划 (PLANNING) ===== -->
+        <section id="page-planning" class="page">
+          <div class="mb-6">
+            <div class="eyebrow mb-2">CAREER · PLANNING</div>
+            <h1 class="font-display font-extrabold text-3xl text-content-text">职业规划引导</h1>
+            <p class="text-content-sub mt-2 text-[15px]">通过分步输入，AI 将为你生成个性化职业方向推荐与匹配岗位。</p>
+          </div>
+
+          <!-- Step progress -->
+          <div class="card p-6 mb-6">
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center gap-1.5">
+                <div id="step-c-1" class="step-circle done"><i class="fa-solid fa-check"></i></div>
+                <div class="text-[11px] font-semibold text-brand-primary">专业信息</div>
+              </div>
+              <div id="step-l-1" class="step-line done"></div>
+              <div class="flex flex-col items-center gap-1.5">
+                <div id="step-c-2" class="step-circle current step-pulse">2</div>
+                <div class="text-[11px] font-semibold text-content-text">兴趣方向</div>
+              </div>
+              <div id="step-l-2" class="step-line"></div>
+              <div class="flex flex-col items-center gap-1.5">
+                <div id="step-c-3" class="step-circle">3</div>
+                <div class="text-[11px] text-content-sub">经历描述</div>
+              </div>
+              <div id="step-l-3" class="step-line"></div>
+              <div class="flex flex-col items-center gap-1.5">
+                <div id="step-c-4" class="step-circle">4</div>
+                <div class="text-[11px] text-content-sub">AI 推荐</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step cards -->
+          <div class="card p-7">
+            <!-- Step 1 -->
+            <div id="step-1" class="step-content hidden">
+              <div class="ai-msg bot mb-5">
+                <div class="ai-avatar bot">🤖</div>
+                <div class="ai-bubble">告诉我你的专业和年级，让我更好地了解你~</div>
+              </div>
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-brand-purple/10 flex items-center justify-center">
+                  <i class="fa-solid fa-graduation-cap text-brand-purple"></i>
+                </div>
+                <div>
+                  <h2 class="font-display font-bold text-xl text-content-text">基础信息</h2>
+                  <p class="text-xs text-content-sub">告诉我们你的专业与年级，便于精准匹配</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-sm font-semibold mb-2 text-content-text">所学专业</label>
+                  <div id="major-search" data-major-search data-placeholder="输入或选择专业名称"></div>
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold mb-2 text-content-text">年级</label>
+                  <div id="grade-selector" data-unified-select 
+                       data-placeholder="请选择年级" 
+                       data-options="grades" 
+                       data-value="大三">
+                  </div>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-sm font-semibold mb-2 text-content-text">学校 <span class="text-content-muted font-normal text-xs">(选填)</span></label>
+                  <div id="school-search" data-school-search data-placeholder="输入或选择学校名称"></div>
+                </div>
+              </div>
+              <div class="flex justify-end mt-6 gap-3">
+                <button class="btn-primary px-5 py-2.5 rounded-lg text-sm" onclick="goToStep(2)">下一步 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="step-2" class="step-content">
+              <div class="ai-msg bot mb-5">
+                <div class="ai-avatar bot">🤖</div>
+                <div class="ai-bubble">现在来探索你的兴趣方向吧！选择你最感兴趣的领域和工作环境~</div>
+              </div>
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-brand-cyan/10 flex items-center justify-center">
+                  <i class="fa-solid fa-heart text-brand-cyan"></i>
+                </div>
+                <div>
+                  <h2 class="font-display font-bold text-xl text-content-text">兴趣方向</h2>
+                  <p class="text-xs text-content-sub">选择你感兴趣的领域与工作环境</p>
+                </div>
+              </div>
+              <div class="mb-5">
+                <label class="block text-sm font-semibold mb-3 text-content-text">兴趣领域 <span class="text-content-sub font-normal text-xs">（可多选）</span></label>
+                <div class="flex flex-wrap gap-2" id="interest-chips">
+                  <span class="chip selected">技术研发</span>
+                  <span class="chip selected">前端开发</span>
+                  <span class="chip">产品设计</span>
+                  <span class="chip">数据分析</span>
+                  <span class="chip">内容创作</span>
+                  <span class="chip">商业运营</span>
+                  <span class="chip">艺术设计</span>
+                  <span class="chip">人工智能</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-3 text-content-text">偏好工作环境</label>
+                <div class="flex flex-wrap gap-2">
+                  <span class="chip selected">互联网大厂</span>
+                  <span class="chip">创业公司</span>
+                  <span class="chip">外企</span>
+                  <span class="chip">国企</span>
+                  <span class="chip">远程办公</span>
+                </div>
+              </div>
+              <div class="flex justify-center items-center gap-3 mt-6">
+                <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="goToStep(1)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i>上一步</button>
+                <button class="btn-primary px-6 py-2.5 rounded-lg text-sm" onclick="goToStep(3)">🚀 生成我的职业方向 →</button>
+              </div>
+              <div class="text-center mt-3">
+                <span class="text-[11px] text-content-muted">按 <kbd class="kbd">Enter</kbd> 键可快速进入下一步</span>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="step-3" class="step-content hidden">
+              <div class="ai-msg bot mb-5">
+                <div class="ai-avatar bot">🤖</div>
+                <div class="ai-bubble">分享你的经历吧——项目、实习或任何你引以为傲的事情！描述越详细，AI 匹配越精准~</div>
+              </div>
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(123,79,224,0.1)">
+                  <i class="fa-solid fa-pen-to-square text-brand-purple"></i>
+                </div>
+                <div>
+                  <h2 class="font-display font-bold text-xl text-content-text">经历描述</h2>
+                  <p class="text-xs text-content-sub">描述你的项目、实习或学习经历（≥50 字触发 AI 精准匹配）</p>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="block text-sm font-semibold text-content-text">已有经历</label>
+                  <span id="exp-count" class="text-[11px] text-content-sub">0 字</span>
+                </div>
+                <textarea id="exp-textarea" class="input" rows="6" placeholder="例如：参与过校园电商小程序开发，负责前端 React 实现；在 XX 公司实习 3 个月，参与后台管理系统开发..."></textarea>
+                <div class="flex items-center gap-2 mt-2 text-[11px]">
+                  <i class="fa-solid fa-circle-info text-brand-cyan"></i>
+                  <span class="text-content-sub">描述越详细，AI 匹配越精准。低于 50 字将走规则兜底推荐。</span>
+                </div>
+              </div>
+              <div class="flex justify-between mt-6">
+                <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="goToStep(2)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i>上一步</button>
+                <button class="btn-primary px-5 py-2.5 rounded-lg text-sm" onclick="goToStep(4)"><i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-xs"></i>生成我的职业推荐</button>
+              </div>
+            </div>
+
+            <!-- Step 4: AI Recommendations -->
+            <div id="step-4" class="step-content hidden">
+              <div class="ai-msg bot mb-5">
+                <div class="ai-avatar bot">🤖</div>
+                <div class="ai-bubble">✨ 正在分析你的画像... 以下是为你量身定制的职业方向推荐！</div>
+              </div>
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,184,212,0.1)">
+                  <i class="fa-solid fa-wand-magic-sparkles text-brand-cyan"></i>
+                </div>
+                <div>
+                  <h2 class="font-display font-bold text-xl text-content-text">AI 推荐结果</h2>
+                  <p class="text-xs text-content-sub">基于你的专业、兴趣与经历，AI 为你匹配 TOP 5 岗位</p>
+                </div>
+              </div>
+              <div class="rounded-xl p-4 mb-5 flex items-start gap-3" style="background:linear-gradient(135deg,rgba(123,79,224,0.06),rgba(0,184,212,0.06));border:1px solid rgba(123,79,224,0.2)">
+                <i class="fa-solid fa-lightbulb text-brand-purple mt-0.5"></i>
+                <div class="text-[13px] text-content-text leading-relaxed">
+                  <span class="font-semibold">AI 分析：</span>你的经历体现扎实的前端工程能力与项目协作经验，与 <span class="text-brand-purple font-semibold">前端开发工程师</span> 方向高度匹配，建议聚焦 React 生态与 TypeScript 深化。
+                </div>
+              </div>
+              <div class="space-y-3" id="recommend-list">
+                <!-- recommend cards injected by JS -->
+              </div>
+              <div class="flex justify-between mt-6">
+                <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="goToStep(3)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i>修改经历</button>
+                <button class="btn-primary px-5 py-2.5 rounded-lg text-sm" onclick="switchPage('resume')"><i class="fa-solid fa-file-lines mr-1.5 text-xs"></i>查看理想简历</button>
+              </div>
+            </div>
+          </div>
+        </section>
