@@ -1,0 +1,302 @@
+        <!-- ===== PAGE: 任务中心 (TASKS) ===== -->
+        <section id="page-tasks" class="page">
+
+          <!-- Confetti container for task completion celebration -->
+          <div class="confetti-container" id="confetti-container" style="display:none;"></div>
+
+          <div class="flex items-start justify-between mb-6 gap-4">
+            <div>
+              <div class="eyebrow mb-2">TASK · CENTER</div>
+              <h1 class="font-display font-extrabold text-3xl text-content-text">任务中心</h1>
+              <p class="text-content-sub mt-2 text-[15px]">AI 动态派发任务队列，完成一项解锁下一项。成果物经 AI 验证后驱动雷达图生长。</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn-ghost px-3.5 py-2 rounded-lg text-sm" onclick="openFilter()"><i class="fa-solid fa-filter mr-1.5 text-xs"></i>筛选</button>
+              <button class="btn-primary px-3.5 py-2 rounded-lg text-sm" onclick="refreshQueue()"><i class="fa-solid fa-rotate mr-1.5 text-xs"></i>刷新队列</button>
+            </div>
+          </div>
+
+          <!-- Status summary -->
+          <div class="grid grid-cols-5 gap-3 mb-6" id="task-status-summary">
+            <div class="card p-3.5 text-center">
+              <div class="text-[11px] text-content-sub mb-1">待开始</div>
+              <div class="font-display font-bold text-xl text-content-text" id="task-stat-pending">0</div>
+            </div>
+            <div class="card p-3.5 text-center">
+              <div class="text-[11px] text-content-sub mb-1">进行中</div>
+              <div class="font-display font-bold text-xl text-brand-cyan" id="task-stat-progress">0</div>
+            </div>
+            <div class="card p-3.5 text-center">
+              <div class="text-[11px] text-content-sub mb-1">验证中</div>
+              <div class="font-display font-bold text-xl text-state-warning" id="task-stat-verifying">0</div>
+            </div>
+            <div class="card p-3.5 text-center">
+              <div class="text-[11px] text-content-sub mb-1">已通过</div>
+              <div class="font-display font-bold text-xl text-state-success" id="task-stat-passed">0</div>
+            </div>
+            <div class="card p-3.5 text-center">
+              <div class="text-[11px] text-content-sub mb-1">需修改</div>
+              <div class="font-display font-bold text-xl text-state-danger" id="task-stat-rejected">0</div>
+            </div>
+          </div>
+
+          <!-- Task chain visualization (dynamic) -->
+          <div class="card p-5 mb-6" id="task-chain-container" style="background:linear-gradient(135deg,rgba(109,94,246,0.04),rgba(14,165,183,0.04))">
+            <div id="task-chain-content"></div>
+          </div>
+
+          <!-- Filter bar: default shows 待开始 + 进行中 -->
+          <div class="flex items-center gap-2 mb-4 flex-wrap">
+            <span class="text-[12px] text-content-sub mr-1">默认筛选：</span>
+            <span class="chip selected" data-filter="active" onclick="toggleTaskFilter(this)">待开始 + 进行中</span>
+            <span class="chip" data-filter="all" onclick="toggleTaskFilter(this)">全部</span>
+            <span class="chip" data-filter="pending" onclick="toggleTaskFilter(this)">仅待开始</span>
+            <span class="chip" data-filter="progress" onclick="toggleTaskFilter(this)">仅进行中</span>
+            <span class="chip" data-filter="history" onclick="toggleTaskFilter(this)">仅历史</span>
+          </div>
+
+          <!-- Active task queue: 待开始 + 进行中 -->
+          <div class="space-y-4" id="task-queue-list">
+
+            <!-- Task 1: in progress (visible by default) -->
+            <div class="card card-hover p-5" data-status="progress">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,184,212,0.1)">
+                  <i class="fa-solid fa-code text-brand-cyan text-lg"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-display font-bold text-base text-content-text">React Hooks 实战项目</h3>
+                    <span class="badge badge-progress">进行中</span>
+                    <span class="badge badge-purple">A 类</span>
+                    <span class="badge" style="background:rgba(239,68,68,0.1);color:#c2333a">优先级高</span>
+                  </div>
+                  <p class="text-[13px] text-content-sub mb-2">使用 useState / useEffect / useMemo 实现 TodoList，需含过滤与本地存储。关联技能：React 框架与 Hooks</p>
+
+                  <div class="rounded-lg p-2.5 mb-2" style="background:rgba(109,94,246,0.04);border:1px solid rgba(109,94,246,0.12)">
+                    <div class="flex items-center gap-1.5 mb-1">
+                      <i class="fa-solid fa-book-open text-brand-purple text-[11px]"></i>
+                      <span class="text-[11px] font-semibold text-content-text">学习笔记大纲</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">① useState 基础</span>
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">② useEffect 生命周期</span>
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">③ useMemo 性能优化</span>
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">④ 自定义 Hook</span>
+                    </div>
+                  </div>
+
+                  <div class="rounded-lg p-2.5 mb-2" style="background:rgba(14,165,183,0.04);border:1px solid rgba(14,165,183,0.12)">
+                    <div class="flex items-center gap-1.5 mb-1">
+                      <i class="fa-brands fa-github text-brand-cyan text-[11px]"></i>
+                      <span class="text-[11px] font-semibold text-content-text">GitHub 模板仓库</span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <a href="#" class="text-[11px] text-brand-cyan hover:underline"><i class="fa-solid fa-link mr-0.5"></i>react-hooks-starter</a>
+                      <span class="text-[10px] text-content-sub">· 含目录结构 + 基础配置</span>
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 8px; padding-top: 10px; border-top: 1px solid #f1f5f9;"><p style="font-size: 12px; color: #64748b; margin-bottom: 6px;">本技能常用于真实岗位：</p><div style="display: flex; gap: 8px;"><span style="font-size: 12px; background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 4px;">字节跳动 - 前端实习生</span><span style="font-size: 12px; background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 4px;">腾讯 - React 开发</span></div></div>
+
+                  <div class="flex items-center gap-4 text-[11px] text-content-sub">
+                    <span><i class="fa-regular fa-clock mr-1"></i>预计 4h</span>
+                    <span><i class="fa-solid fa-link mr-1"></i><a href="#" class="text-brand-cyan hover:underline">React 官方文档</a></span>
+                    <span><i class="fa-solid fa-list-check mr-1"></i>成果物：可运行代码仓库</span>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-2 flex-shrink-0">
+                  <button class="btn-primary px-4 py-2 rounded-lg text-xs" onclick="openSubmitModal('React Hooks 实战项目','A')"><i class="fa-solid fa-upload mr-1.5"></i>提交成果物</button>
+                  <button class="btn-ghost px-4 py-2 rounded-lg text-xs" onclick="openTaskDetail('react-hooks')">查看详情</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 3: pending (visible by default) -->
+            <div class="card card-hover p-5" data-status="pending">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(15,12,41,0.06)">
+                  <i class="fa-solid fa-pen-nib text-content-sub text-lg"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-display font-bold text-base text-content-text">撰写项目复盘总结</h3>
+                    <span class="badge badge-pending">待开始</span>
+                    <span class="badge" style="background:rgba(0,184,212,0.1);color:#009baa">B 类</span>
+                    <span class="badge" style="background:rgba(107,130,80,0.1);color:#4d7c0f">优先级中</span>
+                  </div>
+                  <p class="text-[13px] text-content-sub mb-2">复盘近期完成的项目，输出 ≥500 字心得，重点描述技术决策与踩坑经验。关联技能：软技能 / 表达</p>
+
+                  <div class="rounded-lg p-2.5 mb-2" style="background:rgba(109,94,246,0.04);border:1px solid rgba(109,94,246,0.12)">
+                    <div class="flex items-center gap-1.5 mb-1">
+                      <i class="fa-solid fa-book-open text-brand-purple text-[11px]"></i>
+                      <span class="text-[11px] font-semibold text-content-text">学习笔记大纲</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">① STAR 法则</span>
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">② 技术决策 trade-off</span>
+                      <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">③ 踩坑根因分析</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-4 text-[11px] text-content-sub">
+                    <span><i class="fa-regular fa-clock mr-1"></i>预计 2h</span>
+                    <span><i class="fa-solid fa-list-check mr-1"></i>成果物：复盘报告文本</span>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-2 flex-shrink-0">
+                  <button class="btn-primary px-4 py-2 rounded-lg text-xs" onclick="openSubmitModal('撰写项目复盘总结','B')"><i class="fa-solid fa-upload mr-1.5"></i>提交成果物</button>
+                  <button class="btn-ghost px-4 py-2 rounded-lg text-xs" onclick="openTaskDetail('review')">查看详情</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 5: locked / pending unlock (visible in active queue) -->
+            <div class="card p-5 opacity-60" data-status="locked">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#eef0f4">
+                  <i class="fa-solid fa-lock text-content-sub text-lg"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 class="font-display font-bold text-base text-content-sub">微前端架构实践</h3>
+                    <span class="badge badge-pending">未解锁</span>
+                    <span class="badge badge-purple">A 类</span>
+                  </div>
+                  <p class="text-[13px] text-content-sub mb-2">完成「React Hooks 实战项目」后自动解锁。使用 qiankun 实现微前端 demo。</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty state (hidden by default, shown when no tasks match filter) -->
+            <div class="empty-state" id="task-empty-state" style="display:none;">
+              <div class="empty-state-illustration">
+                <i class="fa-solid fa-inbox"></i>
+              </div>
+              <div class="empty-state-title">当前筛选条件下暂无任务</div>
+              <div class="empty-state-desc">尝试调整筛选条件，或刷新队列获取新的 AI 派发任务。</div>
+              <button class="empty-state-btn" onclick="refreshQueue()">
+                <i class="fa-solid fa-rotate mr-1"></i>刷新任务队列
+              </button>
+            </div>
+          </div>
+
+          <!-- History section: collapsible -->
+          <div class="mt-6" id="task-history-section">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <button class="flex items-center gap-1.5 text-sm font-semibold text-content-text hover:text-brand-purple transition" onclick="toggleHistorySection()" id="history-toggle-btn">
+                  <i class="fa-solid fa-chevron-down text-xs transition-transform" id="history-chevron"></i>
+                  <span>历史记录</span>
+                  <span class="text-[11px] font-normal text-content-sub">（验证中 · 已通过 · 需修改）</span>
+                </button>
+              </div>
+              <div class="flex items-center gap-3 text-[11px] text-content-sub">
+                <span><i class="fa-solid fa-clock-rotate-left mr-1"></i>共 14 条历史</span>
+              </div>
+            </div>
+
+            <div id="history-content" class="space-y-3 overflow-hidden transition-all duration-300" style="max-height:0;opacity:0">
+
+              <!-- Task 2: verifying -->
+              <div class="card card-hover p-5" data-status="verifying">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.1)">
+                    <i class="fa-solid fa-hourglass-half text-state-warning text-lg"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                      <h3 class="font-display font-bold text-base text-content-text">TypeScript 类型实战</h3>
+                      <span class="badge badge-verifying">验证中</span>
+                      <span class="badge badge-purple">A 类</span>
+                      <span class="badge" style="background:rgba(245,158,11,0.1);color:#b9730a">优先级中</span>
+                    </div>
+                    <p class="text-[13px] text-content-sub mb-2">为已有 React 项目补充 TypeScript 类型定义，覆盖 props、state 与 API 响应。关联技能：TypeScript 类型系统</p>
+
+                    <div class="rounded-lg p-2.5 mb-2" style="background:rgba(109,94,246,0.04);border:1px solid rgba(109,94,246,0.12)">
+                      <div class="flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-book-open text-brand-purple text-[11px]"></i>
+                        <span class="text-[11px] font-semibold text-content-text">学习笔记大纲</span>
+                      </div>
+                      <div class="flex flex-wrap gap-1.5">
+                        <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">① interface / type</span>
+                        <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">② 泛型组件</span>
+                        <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">③ API 类型推断</span>
+                        <span class="text-[11px] px-1.5 py-0.5 rounded" style="background:#f1f5f9;color:#475569">④ strict 模式</span>
+                      </div>
+                    </div>
+
+                    <div class="rounded-lg p-2.5 mb-2" style="background:rgba(14,165,183,0.04);border:1px solid rgba(14,165,183,0.12)">
+                      <div class="flex items-center gap-1.5 mb-1">
+                        <i class="fa-brands fa-github text-brand-cyan text-[11px]"></i>
+                        <span class="text-[11px] font-semibold text-content-text">GitHub 模板仓库</span>
+                      </div>
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <a href="#" class="text-[11px] text-brand-cyan hover:underline"><i class="fa-solid fa-link mr-0.5"></i>ts-react-starter</a>
+                        <span class="text-[10px] text-content-sub">· 含 tsconfig + 类型声明</span>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 text-[11px] text-content-sub">
+                      <span><i class="fa-regular fa-clock mr-1"></i>预计 6h</span>
+                      <span><i class="fa-solid fa-robot mr-1"></i>AI 正在评估（约 30s）</span>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-2 flex-shrink-0">
+                    <button class="btn-ghost px-4 py-2 rounded-lg text-xs" disabled style="opacity:0.5;cursor:not-allowed">等待验证</button>
+                    <button class="btn-ghost px-4 py-2 rounded-lg text-xs" onclick="openTaskDetail('typescript')">查看详情</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Task 4: rejected -->
+              <div class="card card-hover p-5" style="border-color:rgba(244,63,94,0.3)" data-status="rejected">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(244,63,94,0.1)">
+                    <i class="fa-solid fa-rotate-left text-state-danger text-lg"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                      <h3 class="font-display font-bold text-base text-content-text">Vite 构建配置实战</h3>
+                      <span class="badge badge-rejected">需修改</span>
+                      <span class="badge badge-purple">A 类</span>
+                      <span class="badge" style="background:rgba(244,63,94,0.1);color:#be123c">优先级高</span>
+                    </div>
+                    <p class="text-[13px] text-content-sub mb-2">配置 Vite 多环境构建，含 alias、代理、压缩。上次提交缺少环境变量处理，请补充后重新提交。</p>
+                    <div class="rounded-lg p-2.5 mt-2 text-[12px]" style="background:rgba(244,63,94,0.06);border:1px solid rgba(244,63,94,0.2)">
+                      <span class="font-semibold text-state-danger">AI 反馈：</span><span class="text-content-text">vite.config.ts 中 process.env 未做类型声明，建议使用 import.meta.env 并补充 env.d.ts。</span>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-2 flex-shrink-0">
+                    <button class="btn-primary px-4 py-2 rounded-lg text-xs" onclick="openSubmitModal('Vite 构建配置实战','A')"><i class="fa-solid fa-upload mr-1.5"></i>重新提交</button>
+                    <button class="btn-ghost px-4 py-2 rounded-lg text-xs" onclick="openTaskDetail('vite')">查看详情</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Passed milestone (summary card) -->
+              <div class="card p-4" style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15)">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(16,185,129,0.15)">
+                      <i class="fa-solid fa-trophy text-state-success"></i>
+                    </div>
+                    <div>
+                      <div class="font-display font-bold text-sm text-content-text">已通过 12 项任务</div>
+                      <div class="text-[11px] text-content-sub">累计获得 48h 学习时长 · 雷达图增长 27%</div>
+                    </div>
+                  </div>
+                  <button class="btn-ghost px-3 py-1.5 rounded-lg text-xs">查看全部 →</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <style>
+            @keyframes chainPulse {
+              0%, 100% { box-shadow: 0 0 0 0 rgba(0,184,212,0.4); }
+              50% { box-shadow: 0 0 0 8px rgba(0,184,212,0); }
+            }
+          </style>
+        </section>
