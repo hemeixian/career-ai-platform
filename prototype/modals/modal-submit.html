@@ -1,0 +1,83 @@
+  <!-- ============ SUBMIT DELIVERABLE MODAL ============ -->
+  <div id="submit-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[560px] max-w-[92vw] overflow-hidden">
+      <!-- Header -->
+      <div class="px-6 py-4 flex items-center justify-between border-b border-content-divider">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(123,79,224,0.1)">
+            <i class="fa-solid fa-upload text-brand-purple"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-content-text">提交成果物</h3>
+            <p id="modal-task-name" class="text-[11px] text-content-sub">任务名称</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg hover:bg-content-divider flex items-center justify-center text-content-sub hover:text-content-text transition" onclick="closeSubmitModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Type tabs -->
+      <div class="flex border-b border-content-divider">
+        <div id="type-tab-A" class="type-tab active" onclick="switchSubmitType('A')">
+          <i class="fa-solid fa-code mr-1.5 text-xs"></i>A 类 · 代码成果
+        </div>
+        <div id="type-tab-B" class="type-tab" onclick="switchSubmitType('B')">
+          <i class="fa-solid fa-pen-nib mr-1.5 text-xs"></i>B 类 · 心得报告
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6">
+        <!-- A type content -->
+        <div id="submit-type-A" class="submit-type">
+          <label class="block text-sm font-semibold mb-2 text-content-text">代码仓库地址</label>
+          <input type="text" class="input font-mono text-[13px]" placeholder="https://github.com/username/repo" />
+          <div class="flex items-center gap-2 mt-2 text-[11px] text-content-sub">
+            <i class="fa-solid fa-circle-info text-brand-cyan"></i>
+            <span>需为 public 仓库，AI 将自动克隆并运行测试</span>
+          </div>
+
+          <label class="block text-sm font-semibold mb-2 mt-5 text-content-text">代码说明（可选）</label>
+          <textarea class="input font-mono text-[13px]" rows="5" placeholder="// 简要描述实现思路、关键文件位置..."></textarea>
+
+          <div class="mt-4 rounded-xl p-3 flex items-start gap-2" style="background:rgba(0,184,212,0.06);border:1px solid rgba(0,184,212,0.2)">
+            <i class="fa-solid fa-shield-halved text-brand-cyan mt-0.5 text-xs"></i>
+            <div class="text-[12px] text-content-text">
+              <span class="font-semibold">A 类验证规则：</span>AI 将检查代码可运行性、测试覆盖率、是否符合任务要求，并通过语义分析评估代码质量。
+            </div>
+          </div>
+        </div>
+
+        <!-- B type content -->
+        <div id="submit-type-B" class="submit-type hidden">
+          <label class="block text-sm font-semibold mb-2 text-content-text">心得报告</label>
+          <textarea class="input" rows="7" placeholder="撰写你的复盘心得，建议 ≥500 字，重点描述：1) 技术决策与原因 2) 遇到的坑 3) 收获与改进..."></textarea>
+          <div class="flex items-center justify-between mt-2 text-[11px] text-content-sub">
+            <span><i class="fa-solid fa-circle-info text-brand-cyan mr-1"></i>AI 将从结构、深度、反思三个维度语义评估</span>
+            <span><span id="report-count">0</span> / 500 字</span>
+          </div>
+
+          <div class="mt-4 grid grid-cols-3 gap-2">
+            <button class="btn-ghost px-3 py-2 rounded-lg text-xs" onclick="addAttachment('附件')"><i class="fa-solid fa-paperclip mr-1"></i>附件</button>
+            <button class="btn-ghost px-3 py-2 rounded-lg text-xs" onclick="addAttachment('图片')"><i class="fa-solid fa-image mr-1"></i>图片</button>
+            <button class="btn-ghost px-3 py-2 rounded-lg text-xs" onclick="addAttachment('链接')"><i class="fa-solid fa-link mr-1"></i>链接</button>
+          </div>
+          <div id="attachment-list" class="mt-3 space-y-1.5"></div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-4 flex items-center justify-between border-t border-content-divider" style="background:#FAFBFC">
+        <div class="text-[11px] text-content-sub">
+          <i class="fa-solid fa-robot text-brand-purple mr-1"></i>
+          提交后 AI 将在约 30 秒内返回验证结果
+        </div>
+        <div id="resume-highlight-area" style="display: none; margin-bottom: 16px; padding: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;"><p style="font-size: 14px; font-weight: 600; color: #15803d; margin-bottom: 8px;">✅ 验证通过！已为你生成简历亮点：</p><p id="highlight-text" style="font-size: 14px; color: #334155;">熟练封装 useDebounce 等自定义 Hook，解决高频事件性能问题，提升交互流畅度 30%。</p><button onclick="navigator.clipboard.writeText(document.getElementById('highlight-text').innerText); alert('已复制到剪贴板！')" style="margin-top: 8px; font-size: 12px; color: #2563eb; background: none; border: none; cursor: pointer;">复制到简历剪贴板 ➡️</button></div>
+        <div class="flex gap-2">
+          <button class="btn-ghost px-4 py-2 rounded-lg text-sm" onclick="closeSubmitModal()">取消</button>
+          <button class="btn-primary px-4 py-2 rounded-lg text-sm" onclick="withLoading(this, () => handleSubmit(), 'AI 验证中…')"><i class="fa-solid fa-paper-plane mr-1.5 text-xs"></i>提交验证</button>
+        </div>
+      </div>
+    </div>
+  </div>
