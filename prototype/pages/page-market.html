@@ -1,0 +1,167 @@
+<!-- ===== PAGE: 岗位市场 (MARKET) ===== -->
+<section id="page-market" class="page">
+  <!-- 页头 -->
+  <div class="flex items-start justify-between mb-6 gap-4">
+    <div>
+      <div class="eyebrow mb-2">JOB · MARKET</div>
+      <h1 class="font-display font-extrabold text-3xl text-content-text">岗位市场</h1>
+      <p class="text-content-sub mt-2 text-[15px]">实时岗位薪资洞察 · 基于你的目标岗位「<span id="market-target-job" class="text-brand-purple font-semibold">前端开发工程师</span>」智能匹配</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn-ghost px-3.5 py-2 rounded-lg text-sm" onclick="openMarketFilter()"><i class="fa-solid fa-filter mr-1.5 text-xs"></i>筛选</button>
+      <button class="btn-primary px-3.5 py-2 rounded-lg text-sm" onclick="refreshMarket()"><i class="fa-solid fa-rotate mr-1.5 text-xs"></i>刷新</button>
+    </div>
+  </div>
+
+  <!-- 搜索栏 -->
+  <div class="card p-4 mb-5">
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="relative flex-1 min-w-[280px]">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-content-sub text-xs"></i>
+        <input id="market-search" type="text" placeholder="搜索岗位名称、公司、技能..." class="input pl-9 pr-4 py-2.5 w-full text-[13px]" oninput="filterMarketJobs()" />
+      </div>
+      <div class="flex items-center gap-2 text-[12px]">
+        <span class="text-content-sub">城市</span>
+        <select id="filter-city" class="input px-3 py-2 text-[12px]" onchange="filterMarketJobs()">
+          <option value="">全部</option>
+          <option value="北京">北京</option>
+          <option value="上海">上海</option>
+          <option value="深圳">深圳</option>
+          <option value="杭州">杭州</option>
+          <option value="广州">广州</option>
+          <option value="成都">成都</option>
+          <option value="远程">远程</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2 text-[12px]">
+        <span class="text-content-sub">薪资</span>
+        <select id="filter-salary" class="input px-3 py-2 text-[12px]" onchange="filterMarketJobs()">
+          <option value="">全部</option>
+          <option value="0-10">10K 以下</option>
+          <option value="10-20">10-20K</option>
+          <option value="20-30">20-30K</option>
+          <option value="30-999">30K 以上</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2 text-[12px]">
+        <span class="text-content-sub">匹配度</span>
+        <select id="filter-match" class="input px-3 py-2 text-[12px]" onchange="filterMarketJobs()">
+          <option value="">全部</option>
+          <option value="80">≥80%</option>
+          <option value="60">≥60%</option>
+          <option value="40">≥40%</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2 text-[12px]">
+        <span class="text-content-sub">排序</span>
+        <select id="sort-by" class="input px-3 py-2 text-[12px]" onchange="filterMarketJobs()">
+          <option value="match">匹配度优先</option>
+          <option value="salary-high">薪资高到低</option>
+          <option value="salary-low">薪资低到高</option>
+          <option value="urgent">急招优先</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 统计摘要 -->
+  <div class="grid grid-cols-5 gap-4 mb-6">
+    <div class="card glass-card card-glow-hover p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[11px] text-content-sub font-medium flex items-center gap-1.5"><i class="fa-solid fa-briefcase text-brand-purple"></i>在招岗位</div>
+      </div>
+      <div class="font-display font-extrabold text-3xl gradient-text-brand" id="stat-total">--</div>
+      <div class="text-[10px] mt-1.5 flex items-center gap-1">
+        <span class="text-state-success"><i class="fa-solid fa-arrow-up"></i> <span id="stat-new">+8</span></span>
+        <span class="text-content-sub">本周新增</span>
+      </div>
+    </div>
+    <div class="card glass-card card-glow-hover p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[11px] text-content-sub font-medium flex items-center gap-1.5"><i class="fa-solid fa-coins text-brand-cyan"></i>平均薪资</div>
+      </div>
+      <div class="font-display font-extrabold text-3xl gradient-text-brand" id="stat-avg-salary">--<span class="text-sm font-normal text-content-sub ml-1">K</span></div>
+      <div class="text-[10px] mt-1.5 flex items-center gap-1">
+        <span class="text-state-success"><i class="fa-solid fa-arrow-up"></i> +3.2%</span>
+        <span class="text-content-sub">较上月</span>
+      </div>
+    </div>
+    <div class="card glass-card card-glow-hover p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[11px] text-content-sub font-medium flex items-center gap-1.5"><i class="fa-solid fa-trophy text-state-warning"></i>最高薪资</div>
+      </div>
+      <div class="font-display font-extrabold text-3xl gradient-text-brand" id="stat-max-salary">--<span class="text-sm font-normal text-content-sub ml-1">K</span></div>
+      <div class="text-[10px] mt-1.5 text-content-sub truncate" id="stat-max-company">--</div>
+    </div>
+    <div class="card glass-card card-glow-hover p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[11px] text-content-sub font-medium flex items-center gap-1.5"><i class="fa-solid fa-star text-brand-purple"></i>高匹配岗位</div>
+      </div>
+      <div class="font-display font-extrabold text-3xl gradient-text-brand" id="stat-high-match">--</div>
+      <div class="text-[10px] mt-1.5 text-content-sub">匹配度 ≥ 80%</div>
+    </div>
+    <div class="card glass-card card-glow-hover p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[11px] text-content-sub font-medium flex items-center gap-1.5"><i class="fa-solid fa-fire text-state-danger"></i>急招岗位</div>
+      </div>
+      <div class="font-display font-extrabold text-3xl gradient-text-brand" id="stat-urgent">--</div>
+      <div class="text-[10px] mt-1.5 text-content-sub">本周急招</div>
+    </div>
+  </div>
+
+  <!-- 主区域：左列表 + 右详情 -->
+  <div class="grid grid-cols-5 gap-5 mb-5">
+    <!-- 左：岗位列表 -->
+    <div class="col-span-3">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-display font-bold text-base text-content-text">推荐岗位</h3>
+        <span class="text-[11px] text-content-sub" id="result-count">--</span>
+      </div>
+      <div id="job-list" class="space-y-3">
+        <!-- JS 渲染 -->
+      </div>
+      <div id="job-empty" class="hidden card p-10 text-center">
+        <i class="fa-regular fa-folder-open text-3xl text-content-sub mb-3"></i>
+        <p class="text-content-sub text-sm">没有找到符合条件的岗位</p>
+        <button class="btn-ghost mt-4 px-4 py-2 rounded-lg text-xs" onclick="resetMarketFilter()">重置筛选</button>
+      </div>
+    </div>
+
+    <!-- 右：薪资趋势 + 行业分布 -->
+    <div class="col-span-2 space-y-5">
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-display font-bold text-base text-content-text">薪资趋势</h3>
+            <p class="text-[11px] text-content-sub mt-0.5">近 12 个月中位数走势</p>
+          </div>
+          <span class="badge badge-progress">2024</span>
+        </div>
+        <div id="market-chart-trend" style="height: 200px;"></div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-display font-bold text-base text-content-text">城市薪资分布</h3>
+            <p class="text-[11px] text-content-sub mt-0.5">一线 vs 新一线 平均薪资对比</p>
+          </div>
+        </div>
+        <div id="market-chart-city" style="height: 220px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 行业分布卡片 -->
+  <div class="card p-5">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h3 class="font-display font-bold text-base text-content-text">行业招聘热度</h3>
+        <p class="text-[11px] text-content-sub mt-0.5">各行业在招岗位数量与平均薪资</p>
+      </div>
+    </div>
+    <div id="industry-list" class="space-y-3">
+      <!-- JS 渲染 -->
+    </div>
+  </div>
+</section>
