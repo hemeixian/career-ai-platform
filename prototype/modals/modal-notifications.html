@@ -1,0 +1,63 @@
+  <!-- ============ NOTIFICATIONS MODAL ============ -->
+  <div id="notif-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[440px] max-w-[92vw] overflow-hidden">
+      <div class="px-6 py-4 flex items-center justify-between border-b border-content-divider">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(244,63,94,0.1)">
+            <i class="fa-regular fa-bell text-state-danger"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-content-text">消息通知</h3>
+            <p class="text-[11px] text-content-sub">最新 3 条未读</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg hover:bg-content-divider flex items-center justify-center text-content-sub hover:text-content-text transition" onclick="closeModal('notif-modal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-3 space-y-2 max-h-[60vh] overflow-y-auto">
+        <div class="rounded-xl p-3 cursor-pointer hover:bg-content-bg transition" onclick="switchPage('tasks'); closeModal('notif-modal')">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.1)">
+              <i class="fa-solid fa-robot text-state-warning text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-[13px] font-semibold text-content-text">TypeScript 任务验证完成</div>
+              <p class="text-[11px] text-content-sub mt-0.5">AI 已完成对「TypeScript 类型实战」的评估，点击查看结果</p>
+              <div class="text-[10px] text-content-sub mt-1">2 分钟前</div>
+            </div>
+            <span class="w-2 h-2 bg-state-danger rounded-full mt-1"></span>
+          </div>
+        </div>
+        <div class="rounded-xl p-3 cursor-pointer hover:bg-content-bg transition" onclick="switchPage('diagnosis'); closeModal('notif-modal')">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(16,185,129,0.1)">
+              <i class="fa-solid fa-arrow-trend-up text-state-success text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-[13px] font-semibold text-content-text">能力雷达图更新</div>
+              <p class="text-[11px] text-content-sub mt-0.5">综合匹配度提升 5%，达到 73%</p>
+              <div class="text-[10px] text-content-sub mt-1">1 小时前</div>
+            </div>
+            <span class="w-2 h-2 bg-state-danger rounded-full mt-1"></span>
+          </div>
+        </div>
+        <div class="rounded-xl p-3 cursor-pointer hover:bg-content-bg transition" onclick="switchPage('tasks'); closeModal('notif-modal')">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(109,94,246,0.1)">
+              <i class="fa-solid fa-list-check text-brand-purple text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-[13px] font-semibold text-content-text">新任务已解锁</div>
+              <p class="text-[11px] text-content-sub mt-0.5">微前端架构实践已解锁，开始挑战吧</p>
+              <div class="text-[10px] text-content-sub mt-1">昨天</div>
+            </div>
+            <span class="w-2 h-2 bg-state-danger rounded-full mt-1"></span>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 py-3 border-t border-content-divider text-center">
+        <button class="text-xs text-brand-purple font-semibold hover:underline" onclick="markAllRead()">全部标为已读</button>
+      </div>
+    </div>
+  </div>
