@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>《职引未来》产品优化改进报告 · 资深产品体验官深度体检</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            dark: '#0A0A14',
+            dark2: '#11111E',
+            purple: '#6D5EF6',
+            purpleDeep: '#5B4BD6',
+            purpleLight: '#8B7FF8',
+            cyan: '#0EA5B7',
+          },
+          content: {
+            bg: '#F7F7F9',
+            card: '#FFFFFF',
+            text: '#16161A',
+            sub: '#6B6B76',
+            divider: '#E8E8EC',
+          },
+          state: {
+            success: '#10B981',
+            warning: '#F59E0B',
+            danger: '#F43F5E',
+            info: '#3B82F6',
+          },
+        },
+        fontFamily: {
+          display: ['Sora', '"Noto Sans SC"', 'sans-serif'],
+          body: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  :root {
+    --brand-purple: #6D5EF6;
+    --brand-cyan: #0EA5B7;
+    --content-bg: #F7F7F9;
+    --content-text: #16161A;
+    --content-sub: #6B6B76;
+    --content-divider: #E8E8EC;
+  }
+  * { -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
+    background: var(--content-bg);
+    color: var(--content-text);
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d8d8de; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6D5EF6; }
+
+  .hero-bg {
+    background: linear-gradient(135deg, #0A0A14 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(109, 94, 246, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(14, 165, 183, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 22px 22px;
+    pointer-events: none;
+  }
+
+  .card-glow {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .section-anchor { scroll-margin-top: 80px; }
+
+  .badge-severity {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+  }
+  .badge-fatal { background: rgba(244,63,94,0.1); color: #e11d48; }
+  .badge-high { background: rgba(245,158,11,0.1); color: #d97706; }
+  .badge-medium { background: rgba(59,130,246,0.1); color: #2563eb; }
+  .badge-low { background: rgba(107,107,118,0.1); color: #4b5563; }
+  .badge-good { background: rgba(16,185,129,0.1); color: #059669; }
+
+  .issue-card {
+    background: #fff;
+    border: 1px solid #E8E8EC;
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+  .issue-card:hover {
+    border-color: rgba(109,94,246,0.3);
+    box-shadow: 0 4px 20px rgba(109,94,246,0.08);
+  }
+
+  .code-block {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+  }
+  .code-block .keyword { color: #c792ea; }
+  .code-block .string { color: #c3e88d; }
+  .code-block .comment { color: #676e95; }
+  .code-block .number { color: #f78c6c; }
+  .code-block .error-line { background: rgba(244,63,94,0.15); display: block; margin: 0 -18px; padding: 0 18px; }
+
+  .score-ring {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px;
+    position: relative;
+  }
+  .score-ring::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 4px solid #E8E8EC;
+  }
+  .score-fill {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-pill {
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .nav-pill:hover {
+    background: rgba(109,94,246,0.08);
+  }
+  .nav-pill.active {
+    background: rgba(109,94,246,0.12);
+    color: #6D5EF6;
+    font-weight: 600;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+  }
+
+  .innovation-card {
+    background: linear-gradient(135deg, #fff 0%, #faf9ff 100%);
+    border: 1px solid #E8E8EC;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .innovation-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6D5EF6, #0EA5B7);
+  }
+  .innovation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(109,94,246,0.12);
+  }
+
+  .cut-card {
+    background: #fff;
+    border: 1px solid #E8E8EC;
+    border-radius: 12px;
+    border-left: 4px solid #F43F5E;
+  }
+
+  table.audit-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  table.audit-table th {
+    background: #f4f4f7;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid #E8E8EC;
+  }
+  table.audit-table td {
+    padding: 10px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f0f3;
+  }
+  table.audit-table tr:hover td {
+    background: #fafafe;
+  }
+
+  .toc-link {
+    transition: all 0.15s;
+    display: block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #6B6B76;
+  }
+  .toc-link:hover {
+    background: rgba(109,94,246,0.06);
+    color: #6D5EF6;
+  }
+
+  .flow-node {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .flow-ok { background: rgba(16,185,129,0.1); color: #059669; border: 1px solid rgba(16,185,129,0.2); }
+  .flow-broken { background: rgba(244,63,94,0.1); color: #e11d48; border: 1px solid rgba(244,63,94,0.2); }
+  .flow-partial { background: rgba(245,158,11,0.1); color: #d97706; border: 1px solid rgba(245,158,11,0.2); }
+
+  .arrow-down {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+    color: #c7c7d0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero-bg text-white relative">
+  <div class="relative z-10 max-w-6xl mx-auto px-6 py-16 md:py-20">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:conic-gradient(from 220deg, #6D5EF6, #0EA5B7, #6D5EF6); box-shadow:0 0 20px rgba(109,94,246,0.5);">
+        <i class="fa-solid fa-clipboard-check text-white text-sm"></i>
+      </div>
+      <span class="text-sm font-medium text-white/60 tracking-wider uppercase">Product Experience Audit</span>
+    </div>
+
+    <h1 class="font-display font-extrabold text-3xl md:text-5xl leading-tight mb-4">
+      《职引未来》产品优化改进报告
+    </h1>
+    <p class="text-lg md:text-xl text-white/70 max-w-2xl mb-8">
+      以资深产品体验官视角，对标头部小程序标准，对"基于反向规划的大学生全周期智能职业成长平台"进行全链路深度体检
+    </p>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
+      <div class="stat-card p-4">
+        <div class="text-2xl font-display font-bold text-white">6801</div>
+        <div class="text-xs text-white/50 mt-1">代码行数审计</div>
+      </div>
+      <div class="stat-card p-4">
+        <div class="text-2xl font-display font-bold text-white">37</div>
+        <div class="text-xs text-white/50 mt-1">问题项定位</div>
+      </div>
+      <div class="stat-card p-4">
+        <div class="text-2xl font-display font-bold text-white">1</div>
+        <div class="text-xs text-white/50 mt-1">致命级BUG</div>
+      </div>
+      <div class="stat-card p-4">
+        <div class="text-2xl font-display font-bold text-white">3</div>
+        <div class="text-xs text-white/50 mt-1">微创新方案</div>
+      </div>
+    </div>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a href="#sec1" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white/10 border border-white/15 hover:bg-white/15 transition">一、视觉与UI硬伤</a>
+      <a href="#sec2" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white/10 border border-white/15 hover:bg-white/15 transition">二、交互体验断层</a>
+      <a href="#sec3" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white/10 border border-white/15 hover:bg-white/15 transition">三、核心业务流程跑通性</a>
+      <a href="#sec4" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white/10 border border-white/15 hover:bg-white/15 transition">四、功能瘦身建议</a>
+      <a href="#sec5" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white/10 border border-white/15 hover:bg-white/15 transition">五、功能微创新建议</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOC ============ -->
+<nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-content-divider">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center gap-1 overflow-x-auto">
+    <a href="#sec1" class="nav-pill px-3 py-1.5 rounded-lg text-sm whitespace-nowrap">一、视觉UI</a>
+    <a href="#sec2" class="nav-pill px-3 py-1.5 rounded-lg text-sm whitespace-nowrap">二、交互断层</a>
+    <a href="#sec3" class="nav-pill px-3 py-1.5 rounded-lg text-sm whitespace-nowrap">三、业务闭环</a>
+    <a href="#sec4" class="nav-pill px-3 py-1.5 rounded-lg text-sm whitespace-nowrap">四、功能瘦身</a>
+    <a href="#sec5" class="nav-pill px-3 py-1.5 rounded-lg text-sm whitespace-nowrap">五、微创新</a>
+    <span class="flex-1"></span>
+    <span class="text-xs text-content-sub whitespace-nowrap">对标标准：微信设计规范 · 美团/瑞幸体验基线</span>
+  </div>
+</nav>
+
+<!-- ============ 总评 ============ -->
+<section class="max-w-6xl mx-auto px-6 py-12">
+  <div class="bg-white rounded-2xl border border-content-divider p-8">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-brand-purple/10 flex items-center justify-center">
+        <i class="fa-solid fa-chart-line text-brand-purple text-sm"></i>
+      </div>
+      <h2 class="font-display font-bold text-xl text-content-text">总体评价</h2>
+    </div>
+
+    <div class="grid md:grid-cols-5 gap-6">
+      <div class="md:col-span-3">
+        <p class="text-content-text leading-relaxed mb-4">
+          "职引未来"在<strong>视觉设计层面</strong>达到了较高水准——深色侧边栏 + 浅色内容区的混合方案、紫青渐变品牌色、卡片化信息架构、ECharts 数据可视化，整体呈现出接近商业化产品的质感。<strong>简历 ATS 评分引擎和模拟面试评分算法</strong>是两个实现扎实的亮点模块，使用了真实的启发式规则而非随机伪造。
+        </p>
+        <p class="text-content-sub leading-relaxed">
+          但以头部小程序标准衡量，产品存在<strong>1 个致命 BUG（任务列表渲染崩溃）</strong>、<strong>核心业务闭环未打通</strong>（任务验证→技能提升→雷达图更新→解锁新任务的链路完全断开）、<strong>移动端零适配</strong>三大硬伤。整体定位更接近"高完成度的交互原型"而非"可投入生产的产品"。以下按五大维度逐一拆解。
+        </p>
+      </div>
+      <div class="md:col-span-2 space-y-3">
+        <div class="flex items-center justify-between p-3 rounded-lg bg-content-bg">
+          <span class="text-sm text-content-sub">视觉设计完成度</span>
+          <div class="flex items-center gap-2">
+            <div class="w-24 h-2 rounded-full bg-content-divider overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-cyan" style="width:82%"></div>
+            </div>
+            <span class="text-sm font-bold text-content-text">82%</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-lg bg-content-bg">
+          <span class="text-sm text-content-sub">交互体验完成度</span>
+          <div class="flex items-center gap-2">
+            <div class="w-24 h-2 rounded-full bg-content-divider overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-cyan" style="width:55%"></div>
+            </div>
+            <span class="text-sm font-bold text-content-text">55%</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-lg bg-content-bg">
+          <span class="text-sm text-content-sub">业务闭环跑通率</span>
+          <div class="flex items-center gap-2">
+            <div class="w-24 h-2 rounded-full bg-content-divider overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-state-warning to-state-danger" style="width:35%"></div>
+            </div>
+            <span class="text-sm font-bold text-content-text">35%</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-lg bg-content-bg">
+          <span class="text-sm text-content-sub">移动端适配度</span>
+          <div class="flex items-center gap-2">
+            <div class="w-24 h-2 rounded-full bg-content-divider overflow-hidden">
+              <div class="h-full rounded-full bg-state-danger" style="width:5%"></div>
+            </div>
+            <span class="text-sm font-bold text-content-text">5%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 一、视觉与UI硬伤 ============ -->
+<section id="sec1" class="section-anchor max-w-6xl mx-auto px-6 py-8">
+  <div class="flex items-center gap-3 mb-2">
+    <div class="w-10 h-10 rounded-xl bg-brand-purple/10 flex items-center justify-center">
+      <span class="font-display font-bold text-brand-purple">01</span>
+    </div>
+    <h2 class="font-display font-bold text-2xl text-content-text">视觉与UI硬伤</h2>
+  </div>
+  <p class="text-content-sub mb-8 ml-13">间距、字体、色彩一致性、对齐问题——以设计系统规范为标尺逐项校验</p>
+
+  <!-- 1.1 色彩不一致 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-high">HIGH</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">1.1 设计系统色值与实际代码双重标准，紫青色调"精神分裂"</h3>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-content-sub mb-3">Tailwind 配置中定义的主色为 <code class="text-xs bg-content-bg px-1.5 py-0.5 rounded">brand.purple: #6D5EF6</code> 和 <code class="text-xs bg-content-bg px-1.5 py-0.5 rounded">brand.cyan: #0EA5B7</code>，但 spec.md 设计规范定义的是 <code class="text-xs bg-content-bg px-1.5 py-0.5 rounded">#7B4FE0</code> 和 <code class="text-xs bg-content-bg px-1.5 py-0.5 rounded">#00B8D4</code>。实际代码中两套色值混用，导致同一页面的紫色按钮和紫色图标肉眼可辨色差。</p>
+        <table class="audit-table mt-3">
+          <thead><tr><th>位置</th><th>实际色值</th><th>应为</th></tr></thead>
+          <tbody>
+            <tr><td>ECharts 雷达图（L4809）</td><td><code>#7B4FE0</code></td><td><code>#6D5EF6</code></td></tr>
+            <tr><td>任务优先级标签（L5793）</td><td><code>rgba(123,79,224,...)</code></td><td><code>rgba(109,94,246,...)</code></td></tr>
+            <tr><td>技能诊断图标（L5796）</td><td><code>#00b8d4</code></td><td><code>#0EA5B7</code></td></tr>
+            <tr><td>Toast 模板内联色（L1262）</td><td><code>#7b4fe0</code></td><td><code>#6D5EF6</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-block">
+<span class="comment">// tailwind.config (L28-29) — 实际定义</span>
+brand: {
+  purple: <span class="string">'#6D5EF6'</span>,  <span class="comment">// ← 代码用这个</span>
+  cyan: <span class="string">'#0EA5B7'</span>,
+}
+
+<span class="comment">// spec.md §7.2 — 设计文档定义</span>
+主色调: <span class="string">'#7B4FE0'</span>  <span class="comment">// ← 文档写这个</span>
+强调色: <span class="string">'#00B8D4'</span>
+
+<span class="comment">// ECharts 雷达图 (L4809) — 实际硬编码</span>
+color: [<span class="string">'#7B4FE0'</span>, <span class="string">'#00B8D4'</span>]
+<span class="error-line"><span class="comment">// ❌ 与 tailwind.config 不一致，肉眼可辨色差</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 p-3 rounded-lg bg-brand-purple/5 border border-brand-purple/15">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-lightbulb text-brand-purple mr-2"></i><strong>修复建议：</strong>统一以 Tailwind 配置为准（<code>#6D5EF6</code> / <code>#0EA5B7</code>），全局搜索替换 <code>#7B4FE0</code> → <code>#6D5EF6</code>、<code>#00B8D4</code> → <code>#0EA5B7</code>，同步更新 spec.md 色彩规范章节。</p>
+    </div>
+  </div>
+
+  <!-- 1.2 无效CSS -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-medium">MEDIUM</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">1.2 `color:linear-gradient()` 无效CSS——图标渐变色静默失效</h3>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-content-sub mb-3">第 4230 行 AI 深度访谈洞察标题的机器人图标使用 <code class="text-xs bg-content-bg px-1.5 py-0.5 rounded">style="color:linear-gradient(135deg,#6D5EF6,#0EA5B7)"</code>。CSS <code>color</code> 属性不支持 <code>linear-gradient</code> 值，浏览器静默忽略，图标回退为默认颜色（继承父元素），渐变效果完全不可见。</p>
+        <p class="text-sm text-content-sub">用户预期看到紫青渐变图标，实际看到的是普通灰色图标，视觉打折扣。</p>
+      </div>
+      <div class="code-block">
+<span class="comment">// L4230 — 当前（无效）</span>
+&lt;i class=<span class="string">"fa-solid fa-robot"</span>
+   style=<span class="string">"color:linear-gradient(135deg,#6D5EF6,#0EA5B7)"</span>&gt;
+<span class="error-line"><span class="comment">// ❌ color 属性不支持 gradient，静默失效</span></span>
+
+<span class="comment">// 修复方案：background-clip + text-fill-color</span>
+&lt;i class=<span class="string">"fa-solid fa-robot gradient-icon"</span>&gt;
+
+<span class="comment">/* CSS */</span>
+.gradient-icon {
+  background: linear-gradient(<span class="number">135</span>deg, #<span class="number">6</span>D<span class="number">5</span>EF<span class="number">6</span>, #<span class="number">0</span>EA<span class="number">5</span>B<span class="number">7</span>);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.3 响应式缺失 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-fatal">FATAL</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">1.3 移动端零适配——spec.md 声称"响应式适配"，代码中无任何媒体查询</h3>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-content-sub mb-3">spec.md §7.7 明确要求"移动端 ≤768px 侧边栏隐藏改用底部 Tab、内容区单列、卡片间距 16px"，但实际代码中<strong>唯一的 <code>@media</code> 查询是打印样式</strong>（L4692），完全没有任何响应式断点。</p>
+        <table class="audit-table">
+          <thead><tr><th>组件</th><th>当前写法</th><th>≤768px 表现</th></tr></thead>
+          <tbody>
+            <tr><td>侧边栏</td><td><code>w-[240px]</code> 固定</td><td>占屏宽 75%，内容区被挤压</td></tr>
+            <tr><td>统计卡片</td><td><code>grid-cols-4</code></td><td>4 列挤在窄屏，文字溢出</td></tr>
+            <tr><td>简历页</td><td><code>grid-cols-[400px_1fr]</code></td><td>400px 左栏 + 1fr 右栏横向溢出</td></tr>
+            <tr><td>搜索框</td><td><code>w-64</code> 固定</td><td>不会自适应缩窄</td></tr>
+            <tr><td>图表</td><td><code>height:320px</code> 固定</td><td>小屏上图表过宽变形</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-block">
+<span class="comment">// 全文件搜索 @media 结果：</span>
+<span class="comment">// L4692 — 唯一的媒体查询</span>
+@media print { ... }
+
+<span class="error-line"><span class="comment">// ❌ 0 个移动端断点定义</span></span>
+<span class="error-line"><span class="comment">// ❌ 0 个 sm:/md:/lg: 响应式前缀使用</span></span>
+<span class="error-line"><span class="comment">// ❌ 无底部 Tab 导航组件</span></span>
+<span class="error-line"><span class="comment">// ❌ 无汉堡菜单切换逻辑</span></span>
+
+<span class="comment">// spec.md §7.7 的承诺：</span>
+<span class="comment">// "侧边栏收起为汉堡菜单或底部 Tab"</span>
+<span class="comment">// "内容区单列布局，卡片间距 16px"</span>
+<span class="comment">// "交互元素增大点击区域"</span>
+<span class="comment">// → 全部未实现</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 p-3 rounded-lg bg-state-danger/5 border border-state-danger/15">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-triangle-exclamation text-state-danger mr-2"></i><strong>影响：</strong>项目定位为"小程序"，但当前在手机浏览器打开会出现布局错乱、侧边栏霸占屏幕、图表变形等严重问题，基本不可用。头部小程序（如美团、瑞幸）均以移动端优先，本产品在移动端体验上与头部标准差距巨大。</p>
+    </div>
+  </div>
+
+  <!-- 1.4 间距与对齐 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-medium">MEDIUM</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">1.4 卡片内间距不统一，同一页面多种 padding 值并存</h3>
+    </div>
+    <p class="text-sm text-content-sub mb-4">内容卡片在不同页面使用了 <code>p-4</code> / <code>p-5</code> / <code>p-6</code> / <code>p-8</code> 四种间距值，缺乏统一规范。对比头部产品（如飞书、Notion）通常严格限定 2-3 种间距尺度（如 12/16/24px），本产品在视觉节奏上显得"碎"。</p>
+    <table class="audit-table">
+      <thead><tr><th>页面</th><th>主要卡片间距</th><th>头部产品标准</th><th>偏差</th></tr></thead>
+      <tbody>
+        <tr><td>工作台 Hero 卡</td><td><code>p-6</code> (24px)</td><td>24px</td><td><span class="badge-severity badge-good">OK</span></td></tr>
+        <tr><td>工作台统计行</td><td><code>p-4</code> (16px)</td><td>16-20px</td><td><span class="badge-severity badge-good">OK</span></td></tr>
+        <tr><td>任务队列卡片</td><td><code>p-5</code> (20px)</td><td>20px</td><td><span class="badge-severity badge-good">OK</span></td></tr>
+        <tr><td>技能诊断摘要</td><td><code>p-6</code> (24px)</td><td>20px</td><td><span class="badge-severity badge-low">+4px</span></td></tr>
+        <tr><td>职业测评卡片</td><td><code>p-8</code> (32px)</td><td>20-24px</td><td><span class="badge-severity badge-medium">+8px 偏大</span></td></tr>
+        <tr><td>模态框内容</td><td><code>p-6</code> (24px) / <code>p-8</code> 混用</td><td>24px 统一</td><td><span class="badge-severity badge-medium">不一致</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1.5 字体加载 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-low">LOW</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">1.5 Google Fonts CDN 在国内加载不稳定，首屏可能闪烁</h3>
+    </div>
+    <p class="text-sm text-content-sub">引入了 Sora + Plus Jakarta Sans + Noto Sans SC + JetBrains Mono 四款字体，全部从 <code>fonts.googleapis.com</code> 加载。国内网络环境下该域名经常被阻断或延迟 3-10 秒，导致首屏文字先用系统字体渲染、字体加载后跳动（FOUT 现象）。头部产品通常使用国内 CDN 镜像或系统字体兜底方案。</p>
+    <div class="mt-3 p-3 rounded-lg bg-content-bg">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-lightbulb text-brand-purple mr-2"></i><strong>建议：</strong>将 Google Fonts 替换为 <code>fonts.font.im</code> 镜像或 <code>cdn.jsdelivr.net</code> 字体源；或使用 <code>font-display: swap</code> + 系统字体 fallback 链（<code>-apple-system, "PingFang SC", "Microsoft YaHei"</code>）保障国内首屏速度。</p>
+    </div>
+  </div>
+
+  <!-- 1.6 对齐问题 -->
+  <div class="issue-card p-6">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-low">LOW</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">1.6 动态生成内容存在对齐偏移——任务卡片"查看详情"按钮与"提交成果物"按钮高度不齐</h3>
+    </div>
+    <p class="text-sm text-content-sub mb-3">第 5834-5836 行动态生成的任务卡片中，"提交成果物"按钮使用 <code>btn-primary</code>（含 <code>py-2</code>），"查看详情"按钮使用 <code>btn-ghost</code>（含 <code>py-2</code>），但因 <code>btn-primary</code> 有 <code>font-weight:600</code> 而 <code>btn-ghost</code> 没有，两者在相同 padding 下实际渲染高度差 1-2px，视觉上轻微不齐。</p>
+    <div class="code-block">
+<span class="comment">// L5834-5836 — 两个按钮高度不一致</span>
+&lt;button class=<span class="string">"btn-primary px-4 py-2 rounded-lg text-xs"</span>&gt;提交成果物&lt;/button&gt;
+&lt;button class=<span class="string">"btn-ghost px-4 py-2 rounded-lg text-xs"</span>&gt;查看详情&lt;/button&gt;
+
+<span class="comment">// btn-primary 有 font-weight:600，btn-ghost 也有</span>
+<span class="comment">// 但 btn-primary 的 line-height 与 btn-ghost 不同</span>
+<span class="comment">// → 两个按钮高度差 1-2px，强迫症用户可见</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 二、交互体验断层 ============ -->
+<section id="sec2" class="section-anchor max-w-6xl mx-auto px-6 py-8">
+  <div class="flex items-center gap-3 mb-2">
+    <div class="w-10 h-10 rounded-xl bg-brand-cyan/10 flex items-center justify-center">
+      <span class="font-display font-bold text-brand-cyan">02</span>
+    </div>
+    <h2 class="font-display font-bold text-2xl text-content-text">交互体验断层</h2>
+  </div>
+  <p class="text-content-sub mb-8 ml-13">点击无反馈、跳转逻辑混乱、加载状态缺失——以"操作必有回响"为原则逐一排查</p>
+
+  <!-- 2.1 致命BUG -->
+  <div class="issue-card p-6 mb-5" style="border-left:4px solid #F43F5E;">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-fatal">FATAL</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.1 致命BUG：任务列表 innerHTML 被数组覆盖，页面渲染崩溃</h3>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-content-sub mb-3"><code>updateTasks()</code> 函数（L5758）先用 <code>tasksContainer.innerHTML = tasks.slice(0,4).map(...).join('')</code> 生成了完整的卡片 HTML，紧接着在 L5842 又执行了 <code>tasksContainer.innerHTML = tasks</code>——这里 <code>tasks</code> 是一个<strong>字符串数组</strong>，赋值给 innerHTML 后会调用 <code>Array.toString()</code>，生成逗号分隔的纯文本（如 <code>"React Hooks 基础实战,TypeScript 类型入门,..."</code>），<strong>精心生成的卡片 HTML 被瞬间覆盖为纯文本</strong>。</p>
+        <p class="text-sm text-content-sub">用户打开任务中心看到的是一堆逗号分隔的任务名称文本，而非设计稿中的卡片布局。这是<strong>全站最严重的功能不可用问题</strong>。</p>
+      </div>
+      <div class="code-block">
+<span class="comment">// L5779 — 正确：生成卡片HTML</span>
+tasksContainer.innerHTML = tasks.slice(<span class="number">0</span>, <span class="number">4</span>)
+  .map((title, i) => {
+    <span class="comment">// ... 返回完整的卡片 HTML 字符串</span>
+    <span class="keyword">return</span> <span class="string">'&lt;div class="card card-hover p-5"&gt;...'</span>;
+  }).join(<span class="string">''</span>);
+
+<span class="error-line"><span class="comment">// L5842 — 致命：用数组覆盖了刚生成的HTML！</span></span>
+<span class="error-line">tasksContainer.innerHTML = tasks;</span>
+<span class="error-line"><span class="comment">// ❌ tasks = ['React Hooks 基础实战', 'TypeScript 类型入门', ...]</span></span>
+<span class="error-line"><span class="comment">// ❌ innerHTML = "React Hooks 基础实战,TypeScript 类型入门,..."</span></span>
+<span class="error-line"><span class="comment">// → 卡片布局被替换为纯文本</span></span>
+
+<span class="comment">// 修复：删除 L5842 这一行即可</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.2 空壳函数 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-high">HIGH</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.2 四个"空壳函数"——按钮可点击但无实际功能</h3>
+    </div>
+    <table class="audit-table mb-4">
+      <thead><tr><th>函数名</th><th>行号</th><th>触发入口</th><th>实际行为</th><th>用户预期</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>refreshQueue()</code></td>
+          <td>L4666</td>
+          <td>任务中心"刷新队列"按钮</td>
+          <td><code>showToast('暂无新任务派发')</code></td>
+          <td>向后端请求新任务</td>
+        </tr>
+        <tr>
+          <td><code>applyFilter()</code></td>
+          <td>L4661</td>
+          <td>任务筛选弹窗"应用"按钮</td>
+          <td>仅计数 + Toast，<strong>不执行任何DOM过滤</strong></td>
+          <td>筛选显示符合条件的任务</td>
+        </tr>
+        <tr>
+          <td><code>markAllRead()</code></td>
+          <td>L4528</td>
+          <td>通知弹窗"全部已读"</td>
+          <td>仅关闭弹窗，<strong>不清除红点徽标</strong></td>
+          <td>红点消失，通知标记已读</td>
+        </tr>
+        <tr>
+          <td><code>updateJobMatchScores()</code></td>
+          <td>L4482</td>
+          <td>测评结果"更新岗位匹配"按钮</td>
+          <td>仅 Toast，<strong>不更新任何匹配分数</strong></td>
+          <td>岗位匹配度重新计算</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="p-3 rounded-lg bg-state-warning/5 border border-state-warning/15">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-circle-exclamation text-state-warning mr-2"></i><strong>对标差距：</strong>头部产品（如美团、小红书）的"全部已读"点击后红点立即消失且列表项视觉变化；本产品点击后弹窗关闭但红点仍在，用户会误以为操作失败而反复点击，产生强烈的"假交互"挫败感。</p>
+    </div>
+  </div>
+
+  <!-- 2.3 handleSearch重复定义 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-high">HIGH</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.3 handleSearch() 重复定义——第一版成为死代码，搜索路由逻辑丢失</h3>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-content-sub mb-3"><code>handleSearch()</code> 在 L4537 和 L6007 被定义了两次。JavaScript 函数声明提升后，<strong>第二次定义覆盖第一次</strong>，L4537 版本的全部代码成为死代码。</p>
+        <p class="text-sm text-content-sub mb-3">第一版包含关键词→页面路由的映射逻辑（搜索"任务"跳转任务中心等），第二版改为纯数据匹配搜索。结果：<strong>顶部搜索框无法跳转页面</strong>，仅做本地数据过滤，与交互预期不符。</p>
+      </div>
+      <div class="code-block">
+<span class="comment">// L4537 — 第一版（已被覆盖，死代码）</span>
+<span class="keyword">function</span> handleSearch() {
+  <span class="comment">// 包含关键词→页面路由映射</span>
+  <span class="keyword">if</span> (q.includes(<span class="string">'任务'</span>)) switchPage(<span class="string">'tasks'</span>);
+  <span class="keyword">if</span> (q.includes(<span class="string">'简历'</span>)) switchPage(<span class="string">'resume'</span>);
+  <span class="comment">// ... 路由跳转逻辑</span>
+}
+
+<span class="error-line"><span class="comment">// L6007 — 第二版（覆盖了第一版）</span></span>
+<span class="keyword">function</span> handleSearch() {
+  <span class="comment">// 仅做本地数据匹配，无页面跳转</span>
+  <span class="keyword">const</span> results = SEARCH_DATA.filter(...);
+  <span class="comment">// → 搜索"任务"不再跳转到任务中心</span>
+}
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.4 死链 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-medium">MEDIUM</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.4 多处死链与无反馈点击——"查看详情"仅 Toast 不弹窗</h3>
+    </div>
+    <table class="audit-table">
+      <thead><tr><th>位置</th><th>元素</th><th>当前行为</th><th>应有行为</th></tr></thead>
+      <tbody>
+        <tr><td>L5836</td><td>动态生成任务的"查看详情"按钮</td><td><code>showToast('任务详情加载中...')</code></td><td>调用 <code>openTaskDetail()</code> 弹出详情模态框</td></tr>
+        <tr><td>L1922/1944/1955</td><td>技能诊断"推荐课程"链接</td><td><code>href="#"</code> → 页面跳到顶部</td><td>打开课程详情或外链</td></tr>
+        <tr><td>L2105</td><td>任务详情"React 官方文档"链接</td><td><code>href="#"</code> → 页面跳到顶部</td><td>打开 <code>https://react.dev</code></td></tr>
+        <tr><td>L828</td><td>登录页"用户协议"/"隐私政策"</td><td>有 <code>cursor-pointer</code> 无 <code>onclick</code></td><td>弹出协议文本或跳转</td></tr>
+        <tr><td>L1100-1109</td><td>"面试中心"/"行业趋势"导航项</td><td><code>cursor-not-allowed</code></td><td>至少 hover 提示"即将上线"</td></tr>
+      </tbody>
+    </table>
+    <div class="mt-3 p-3 rounded-lg bg-content-bg">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-lightbulb text-brand-purple mr-2"></i><strong>建议：</strong>所有 <code>href="#"</code> 统一改为 <code>href="javascript:void(0)"</code> 或添加 <code>onclick="return false"</code>，避免页面跳顶。对"即将上线"的导航项添加 <code>title</code> 属性或自定义 Tooltip。</p>
+    </div>
+  </div>
+
+  <!-- 2.5 加载状态缺失 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-high">HIGH</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.5 任务提交无加载状态——用户可重复点击，验证结果不更新UI</h3>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-content-sub mb-3"><code>handleSubmit()</code>（L3507）执行流程：关闭弹窗 → Toast "AI 正在验证中..." → 2.2 秒后 Toast "AI 验证完成"。全程<strong>不更新任务卡片状态</strong>（badge 不变 "进行中"→"已通过"）、<strong>不禁用提交按钮</strong>（用户可立即再次点击提交）、<strong>不展示验证结果详情</strong>（通过/不通过/反馈建议）。</p>
+        <p class="text-sm text-content-sub">spec.md §6.4.4 要求"任务卡片显示'验证中→已通过/需修改'状态流转"，当前完全未实现。用户提交后如同石沉大海，不知是否成功、不知结果如何。</p>
+      </div>
+      <div>
+        <div class="code-block">
+<span class="comment">// L3507-3524 — 当前实现</span>
+<span class="keyword">function</span> handleSubmit() {
+  <span class="comment">// ... 基本校验</span>
+  closeSubmitModal();
+  showToast(<span class="string">'AI 正在验证中...'</span>, <span class="string">'robot'</span>);
+  setTimeout(() =&gt; {
+    showToast(<span class="string">'AI 验证完成'</span>, <span class="string">'check'</span>);
+  }, <span class="number">2200</span>);
+<span class="error-line">  <span class="comment">// ❌ 不更新任务状态 badge</span></span>
+<span class="error-line">  <span class="comment">// ❌ 不禁用提交按钮</span></span>
+<span class="error-line">  <span class="comment">// ❌ 不展示验证结果模态框</span></span>
+<span class="error-line">  <span class="comment">// ❌ 不解锁后续任务</span></span>
+<span class="error-line">  <span class="comment">// ❌ 不更新雷达图/匹配度</span></span>
+}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.6 confirm不一致 -->
+  <div class="issue-card p-6 mb-5">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-medium">MEDIUM</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.6 确认弹窗不统一——原生 confirm() 与自定义模态框混用</h3>
+    </div>
+    <p class="text-sm text-content-sub mb-3">大部分确认操作使用设计精美的自定义 <code>showConfirm()</code> 模态框（白底圆角、品牌色按钮），但 <code>closeAIInterview()</code>（L4488）和 <code>quitInterview()</code>（L6683）使用了浏览器原生 <code>window.confirm()</code>，弹出的灰色系统对话框与整体设计风格割裂。</p>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="p-4 rounded-lg bg-content-bg">
+        <p class="text-xs font-semibold text-state-success mb-1">✅ 一致的做法</p>
+        <p class="text-sm text-content-text">删除任务、退出登录等 → <code>showConfirm()</code> 自定义模态框</p>
+      </div>
+      <div class="p-4 rounded-lg bg-content-bg">
+        <p class="text-xs font-semibold text-state-danger mb-1">❌ 不一致的做法</p>
+        <p class="text-sm text-content-text">退出AI访谈、退出模拟面试 → <code>window.confirm()</code> 原生对话框</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.7 addAttachment -->
+  <div class="issue-card p-6">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="badge-severity badge-medium">MEDIUM</span>
+      <h3 class="font-display font-bold text-lg text-content-text flex-1">2.7 附件添加使用 window.prompt()——原生输入框与产品调性不符</h3>
+    </div>
+    <p class="text-sm text-content-sub"><code>addAttachment()</code>（L3526）使用 <code>window.prompt()</code> 让用户输入链接地址。原生 prompt 框样式不可控、无法校验输入、移动端体验极差（遮挡全屏）。头部产品（如飞书附件、Notion embed）均使用内联输入框或自定义弹窗。</p>
+  </div>
+</section>
+
+<!-- ============ 三、核心业务流程跑通性 ============ -->
+<section id="sec3" class="section-anchor max-w-6xl mx-auto px-6 py-8">
+  <div class="flex items-center gap-3 mb-2">
+    <div class="w-10 h-10 rounded-xl bg-state-warning/10 flex items-center justify-center">
+      <span class="font-display font-bold text-state-warning">03</span>
+    </div>
+    <h2 class="font-display font-bold text-2xl text-content-text">核心业务流程跑通性</h2>
+  </div>
+  <p class="text-content-sub mb-8 ml-13">从"选目标"到"生成每日任务"的全链路闭环检测——反向规划核心方法论是否落地</p>
+
+  <!-- 3.1 全链路流程图 -->
+  <div class="bg-white rounded-2xl border border-content-divider p-6 md:p-8 mb-6">
+    <h3 class="font-display font-bold text-lg text-content-text mb-6">3.1 反向规划闭环链路追踪</h3>
+    <p class="text-sm text-content-sub mb-6">spec.md §2.1 定义了 7 步闭环：①目标锚定 → ②理想简历 → ③差距诊断 → ④任务派发 → ⑤成果物验证 → ⑥雷达图抬升 → ⑦重新诊断。以下是每一步的实际跑通状态：</p>
+
+    <div class="space-y-2">
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-ok"><i class="fa-solid fa-check-circle"></i>① 目标岗位锚定</span>
+        <span class="text-xs text-content-sub">Onboarding 选择身份+兴趣 → 匹配 JOB_TAGS_MAP → 生成目标岗位</span>
+      </div>
+      <div class="arrow-down"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-partial"><i class="fa-solid fa-circle-half-stroke"></i>② AI 生成理想简历</span>
+        <span class="text-xs text-content-sub">左栏展示硬编码样板，<strong>非 AI 实时生成</strong>；简历诊断引擎（scoreResume）实现扎实</span>
+      </div>
+      <div class="arrow-down"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-partial"><i class="fa-solid fa-circle-half-stroke"></i>③ 差距诊断</span>
+        <span class="text-xs text-content-sub">技能清单基于 jobTags 动态生成 ✓；雷达图数据<strong>硬编码</strong> [65,48,72,55,60] ✗</span>
+      </div>
+      <div class="arrow-down"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-partial"><i class="fa-solid fa-circle-half-stroke"></i>④ 任务派发</span>
+        <span class="text-xs text-content-sub">基于 target 匹配 taskTitles 字典 ✓；但 <strong>innerHTML 被数组覆盖</strong>（致命BUG）✗</span>
+      </div>
+      <div class="arrow-down"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-broken"><i class="fa-solid fa-circle-xmark"></i>⑤ 成果物 AI 验证</span>
+        <span class="text-xs text-content-sub"><strong>仅 setTimeout + Toast 模拟</strong>，不调用 AI API，不返回验证结果</span>
+      </div>
+      <div class="arrow-down"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-broken"><i class="fa-solid fa-circle-xmark"></i>⑥ 雷达图渐进抬升</span>
+        <span class="text-xs text-content-sub"><strong>完全断开</strong>——任务验证后不更新技能掌握度、不更新雷达图数据</span>
+      </div>
+      <div class="arrow-down"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="flow-node flow-broken"><i class="fa-solid fa-circle-xmark"></i>⑦ 重新诊断闭环</span>
+        <span class="text-xs text-content-sub"><code>rediagnose()</code> 仅 1.8 秒后 Toast "匹配度提升至 73%"，<strong>数字硬编码</strong>，不触发真实诊断</span>
+      </div>
+    </div>
+
+    <div class="mt-6 p-4 rounded-xl bg-state-danger/5 border border-state-danger/15">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-triangle-exclamation text-state-danger mr-2"></i><strong>结论：7 步闭环中，① 基本打通、②③④ 部分打通（数据硬编码）、⑤⑥⑦ 完全断开。</strong>核心成长循环"完成任务→AI验证→技能提升→雷达图生长→解锁新任务"完全未实现，用户完成任务后看不到任何成长反馈，反向规划的核心价值主张落空。</p>
+    </div>
+  </div>
+
+  <!-- 3.2 断点详情 -->
+  <div class="issue-card p-6 md:p-8 mb-6">
+    <h3 class="font-display font-bold text-lg text-content-text mb-4">3.2 五大断点详情</h3>
+    <div class="space-y-5">
+      <!-- 断点1 -->
+      <div class="border-l-3 border-state-danger pl-4" style="border-left-width:3px;border-left-color:#F43F5E;">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-severity badge-fatal">断点 1</span>
+          <span class="font-semibold text-content-text">任务验证 → 技能提升：完全断开</span>
+        </div>
+        <p class="text-sm text-content-sub"><code>handleSubmit()</code> 提交后不更新 <code>currentAccount</code> 的 <code>tasksDone</code> 计数，不修改技能清单中对应技能的状态标签（"待学习"→"已掌握"），不触发雷达图维度分值变化。spec.md §6.4.3 要求"验证通过→雷达图对应维度渐进抬升+技能解锁特效"，代码中<strong>零行实现</strong>。</p>
+      </div>
+      <!-- 断点2 -->
+      <div class="border-l-3 border-state-danger pl-4" style="border-left-width:3px;border-left-color:#F43F5E;">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-severity badge-fatal">断点 2</span>
+          <span class="font-semibold text-content-text">技能提升 → 雷达图更新：完全断开</span>
+        </div>
+        <p class="text-sm text-content-sub">雷达图数据硬编码在 <code>initRadarChart()</code>（L4889-4890：<code>[65,48,72,55,60]</code> vs <code>[90,85,80,75,88]</code>），不随用户任务完成度变化。即使手动修改 <code>currentAccount</code> 的技能分值，雷达图也不会重绘。</p>
+      </div>
+      <!-- 断点3 -->
+      <div class="border-l-3 border-state-danger pl-4" style="border-left-width:3px;border-left-color:#F43F5E;">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-severity badge-fatal">断点 3</span>
+          <span class="font-semibold text-content-text">任务验证 → 解锁后续任务：完全断开</span>
+        </div>
+        <p class="text-sm text-content-sub">spec.md §6.4.5 要求"当前任务验证通过后，下一个待解锁任务自动'长'出——卡片从半透明渐变为高亮、伴随缩放+淡入入场动画"。实际代码中任务列表的 <code>isLocked</code> 状态基于 <code>i &gt; 1</code> 硬编码，不随任务完成状态动态变化。提交任务后，待解锁任务不会变为可点击状态。</p>
+      </div>
+      <!-- 断点4 -->
+      <div class="border-l-3 border-state-warning pl-4" style="border-left-width:3px;border-left-color:#F59E0B;">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-severity badge-high">断点 4</span>
+          <span class="font-semibold text-content-text">简历诊断 → 任务推荐：数据不传递</span>
+        </div>
+        <p class="text-sm text-content-sub">简历诊断模块（scoreResume + rewriteExperience）有扎实的实现，但诊断结果（薄弱项、缺失技能）<strong>不传递</strong>到任务中心。任务仍基于 Onboarding 阶段选择的目标岗位匹配，不反映简历诊断发现的差距。</p>
+      </div>
+      <!-- 断点5 -->
+      <div class="border-l-3 border-state-warning pl-4" style="border-left-width:3px;border-left-color:#F59E0B;">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="badge-severity badge-high">断点 5</span>
+          <span class="font-semibold text-content-text">职业测评 → 岗位匹配：仅 Toast 提示</span>
+        </div>
+        <p class="text-sm text-content-sub">用户完成 MBTI/霍兰德/DISC 测评后，<code>updateJobMatchScores()</code>（L4482）仅显示 Toast "匹配度已更新"，实际不修改任何匹配分数。测评结果中的推荐岗位列表仅展示在结果弹窗中，不回写到用户的岗位推荐流。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.3 假数据清单 -->
+  <div class="issue-card p-6 md:p-8">
+    <h3 class="font-display font-bold text-lg text-content-text mb-4">3.3 假数据/模拟数据清单</h3>
+    <table class="audit-table">
+      <thead><tr><th>数据项</th><th>行号</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>3 个预设账号</td><td>L3208-3212</td><td>硬编码</td><td>张明/李华/王悦，含完整画像，登录表单预填凭据</td></tr>
+        <tr><td>5 个岗位推荐</td><td>L3428-3434</td><td>硬编码</td><td>字节/腾讯/美团/网易/小红书，不随用户画像变化</td></tr>
+        <tr><td>雷达图数据</td><td>L4889-4890</td><td>硬编码</td><td>固定 [65,48,72,55,60]，所有用户相同</td></tr>
+        <tr><td>任务验证结果</td><td>L3524</td><td>模拟</td><td>setTimeout 2.2s 后 Toast "验证完成"，无真实 AI 调用</td></tr>
+        <tr><td>重新诊断结果</td><td>L4717</td><td>模拟</td><td>1.8s 后 Toast "匹配度提升至 73%"，数字硬编码</td></tr>
+        <tr><td>社交登录</td><td>L4949</td><td>模拟</td><td>0.8s 后直接进入，无 OAuth 流程</td></tr>
+        <tr><td>登录验证</td><td>L4941</td><td>模拟</td><td>任意非空输入即可登录</td></tr>
+        <tr><td>头像更换</td><td>L3572</td><td>模拟</td><td>随机选 Unsplash 图片，无文件上传</td></tr>
+      </tbody>
+    </table>
+    <div class="mt-4 p-3 rounded-lg bg-state-info/5 border border-state-info/15">
+      <p class="text-sm text-content-text"><i class="fa-solid fa-circle-info text-state-info mr-2"></i><strong>说明：</strong>作为比赛 Demo/原型，部分模拟数据可以接受。但<strong>核心闭环中的假数据</strong>（任务验证结果、雷达图数据、重新诊断结果）直接导致反向规划方法论无法演示，这是产品层面的致命缺陷。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 四、功能瘦身建议 ============ -->
+<section id="sec4" class="section-anchor max-w-6xl mx-auto px-6 py-8">
+  <div class="flex items-center gap-3 mb-2">
+    <div class="w-10 h-10 rounded-xl bg-state-danger/10 flex items-center justify-center">
+      <span class="font-display font-bold text-state-danger">04</span>
+    </div>
+    <h2 class="font-display font-bold text-2xl text-content-text">功能瘦身建议（砍掉）</h2>
+  </div>
+  <p class="text-content-sub mb-8 ml-13">根据实际界面与使用频率，指出累赘功能，建议直接砍掉或降级</p>
+
+  <div class="grid md:grid-cols-2 gap-5">
+    <!-- 砍掉1 -->
+    <div class="cut-card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-state-danger/10 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-scissors text-state-danger text-sm"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-base text-content-text">职业测评模块（MBTI/霍兰德/DISC/价值观）</h3>
+          <p class="text-xs text-content-sub mt-1">page-assessment · L2213-2653 · 约 440 行</p>
+        </div>
+      </div>
+      <p class="text-sm text-content-sub mb-3">4 套测评题库共 40+ 道题，占据大量代码体积。但测评结果与核心闭环完全断开（<code>updateJobMatchScores()</code> 是空壳），用户做完测评后仅看一个结果弹窗，不影响岗位推荐、不影响任务派发、不影响雷达图。</p>
+      <div class="p-2.5 rounded-lg bg-content-bg">
+        <p class="text-xs text-content-text"><strong>砍掉理由：</strong>投入产出比极低——440 行代码 + 4 套题库，对核心"反向规划"闭环零贡献。MBTI 等测评结果可信度在求职场景中本就存疑，不如将精力集中在闭环打通上。<strong>建议：直接移除，或降级为一个轻量的"兴趣标签补充"入口。</strong></p>
+      </div>
+    </div>
+
+    <!-- 砍掉2 -->
+    <div class="cut-card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-state-danger/10 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-scissors text-state-danger text-sm"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-base text-content-text">AI 深度访谈（ai-interview-modal）</h3>
+          <p class="text-xs text-content-sub mt-1">L2698-2800 · 约 100 行 HTML + JS</p>
+        </div>
+      </div>
+      <p class="text-sm text-content-sub mb-3">7 个预设问题的 AI 对话式访谈，收集工作风格/团队角色/压力应对等特质。但访谈结果仅展示在"完整职业画像报告"弹窗中，<strong>不回写</strong>到用户画像、不影响岗位推荐。且与 Onboarding 阶段的 AI 对话功能高度重复。</p>
+      <div class="p-2.5 rounded-lg bg-content-bg">
+        <p class="text-xs text-content-text"><strong>砍掉理由：</strong>与 Onboarding AI 对话功能重叠，用户需经历两次 AI 对话（Onboarding 1 次 + 测评页 1 次），体验冗余。访谈洞察 6 个维度（工作风格/团队角色等）对大学生用户过于"职场化"，与目标用户画像不匹配。<strong>建议：移除独立入口，将核心洞察融入 Onboarding AI 对话。</strong></p>
+      </div>
+    </div>
+
+    <!-- 砍掉3 -->
+    <div class="cut-card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-state-danger/10 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-scissors text-state-danger text-sm"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-base text-content-text">任务筛选弹窗（filter-modal）</h3>
+          <p class="text-xs text-content-sub mt-1">L2975 · <code>applyFilter()</code> L4661</p>
+        </div>
+      </div>
+      <p class="text-sm text-content-sub mb-3">筛选弹窗支持按"类型/优先级/状态"筛选任务，但 <code>applyFilter()</code> 仅统计筛选结果数量并 Toast 提示，<strong>不执行任何 DOM 过滤操作</strong>。用户看到筛选弹窗→选条件→点应用→Toast"找到 X 个任务"→列表不变，产生强烈挫败感。</p>
+      <div class="p-2.5 rounded-lg bg-content-bg">
+        <p class="text-xs text-content-text"><strong>砍掉理由：</strong>spec.md §6.4.5 明确要求任务列表"仅展示 3 个状态块（进行中/待解锁/已完成）"，本就不需要筛选。当前任务总数仅 3-5 个，筛选功能纯属过度设计。<strong>建议：直接移除筛选入口，保留简洁的三状态块设计。</strong></p>
+      </div>
+    </div>
+
+    <!-- 砍掉4 -->
+    <div class="cut-card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-state-danger/10 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-scissors text-state-danger text-sm"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-base text-content-text">"面试中心"和"行业趋势"导航占位项</h3>
+          <p class="text-xs text-content-sub mt-1">L1100-1109 · 标记 SOON</p>
+        </div>
+      </div>
+      <p class="text-sm text-content-sub mb-3">侧边栏底部有两个灰色不可点击的"即将上线"导航项。spec.md 已明确这两个模块为"后期迭代预留"，但占位项在导航中占据视觉空间，且 <code>cursor-not-allowed</code> 无任何 hover 提示，用户点击后无反馈。</p>
+      <div class="p-2.5 rounded-lg bg-content-bg">
+        <p class="text-xs text-content-text"><strong>砍掉理由：</strong>头部产品（如飞书、Notion）不会在导航中放置不可用的占位项。占位项降低导航的信息密度，让用户误以为产品"半成品"。<strong>建议：直接移除，后续版本上线时再加回。</strong></p>
+      </div>
+    </div>
+
+    <!-- 砍掉5 -->
+    <div class="cut-card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-state-danger/10 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-scissors text-state-danger text-sm"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-base text-content-text">社交登录按钮（微信/GitHub/Google）</h3>
+          <p class="text-xs text-content-sub mt-1">L814-828 · <code>quickLogin()</code> L4949</p>
+        </div>
+      </div>
+      <p class="text-sm text-content-sub mb-3">登录页展示三个社交登录按钮，但 <code>quickLogin()</code> 仅 <code>setTimeout</code> 0.8 秒后直接进入应用，无任何 OAuth 跳转。spec.md v5.0 已将认证方式从微信登录改为"邮箱+密码"，社交登录按钮纯属遗留。</p>
+      <div class="p-2.5 rounded-lg bg-content-bg">
+        <p class="text-xs text-content-text"><strong>砍掉理由：</strong>假社交登录按钮误导用户，点击后"假装登录成功"但不获取任何社交账号信息，存在数据可信度问题。<strong>建议：移除社交登录按钮，聚焦邮箱+密码 + 演示账号一键登录。</strong></p>
+      </div>
+    </div>
+
+    <!-- 砍掉6 -->
+    <div class="cut-card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-state-danger/10 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-scissors text-state-danger text-sm"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-base text-content-text">"刷新队列"按钮</h3>
+          <p class="text-xs text-content-sub mt-1">L4666 · <code>refreshQueue()</code></p>
+        </div>
+      </div>
+      <p class="text-sm text-content-sub mb-3">任务中心有一个"刷新队列"按钮，点击后 <code>showToast('暂无新任务派发')</code>。spec.md §6.4.5 设计的是"动态队列——完成一个解锁下一个"，任务由系统自动派发，不需要用户手动刷新。</p>
+      <div class="p-2.5 rounded-lg bg-content-bg">
+        <p class="text-xs text-content-text"><strong>砍掉理由：</strong>手动刷新与"动态解锁"设计理念矛盾。用户看到"刷新"按钮会误以为任务列表是手动拉取的，与"AI 自动派发"的心智模型冲突。<strong>建议：移除按钮，改为任务完成后的自动派发动画。</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五、功能微创新建议 ============ -->
+<section id="sec5" class="section-anchor max-w-6xl mx-auto px-6 py-8">
+  <div class="flex items-center gap-3 mb-2">
+    <div class="w-10 h-10 rounded-xl bg-state-success/10 flex items-center justify-center">
+      <span class="font-display font-bold text-state-success">05</span>
+    </div>
+    <h2 class="font-display font-bold text-2xl text-content-text">功能微创新建议（加入）</h2>
+  </div>
+  <p class="text-content-sub mb-8 ml-13">基于"反向规划"主题，低成本高感知度的新增亮点功能——让核心方法论真正可感知</p>
+
+  <div class="space-y-6">
+    <!-- 创新1 -->
+    <div class="innovation-card p-6 md:p-8">
+      <div class="flex items-start gap-4 mb-5">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg, rgba(109,94,246,0.12), rgba(14,165,183,0.08));">
+          <i class="fa-solid fa-arrows-to-circle text-brand-purple text-lg"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="badge-severity badge-good">推荐优先级 P0</span>
+            <span class="text-xs text-content-sub">开发成本：约 2 天</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-content-text">创新一：「差距热力图」——理想简历 vs 我的简历，一图看清"差在哪"</h3>
+        </div>
+      </div>
+
+      <p class="text-sm text-content-sub mb-4 leading-relaxed">当前"理想简历"模块仅展示一份静态样板，用户看完后并不知道"我和理想候选人差多少"。新增一张<strong>左右对比热力图</strong>：左栏理想简历各项（教育/技能/项目/实习/证书），右栏用户简历对应项，中间用颜色编码差距——绿色"已达成"、黄色"部分达成"、红色"未达成"、灰色"无法对比"。点击红色项直接跳转到对应任务。</p>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="p-4 rounded-xl bg-content-bg">
+          <p class="text-xs font-semibold text-content-text mb-2">用户感知</p>
+          <p class="text-sm text-content-sub">"原来我差的是项目经验和分布式系统技能"——<strong>一秒看清差距</strong>，比读文字清单直观 10 倍。热力图天然适配"反向规划"的核心叙事："从终点倒推差距"。</p>
+        </div>
+        <div class="p-4 rounded-xl bg-content-bg">
+          <p class="text-xs font-semibold text-content-text mb-2">实现路径</p>
+          <p class="text-sm text-content-sub">复用已有 <code>scoreResume()</code> 启发式引擎的输出（结构完整度/关键词匹配/量化成果），将各维度得分映射为热力色值。ECharts 矩阵热力图或纯 CSS grid + 背景色即可实现，<strong>无需新增 AI 调用</strong>。</p>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-brand-purple/5 border border-brand-purple/15">
+        <p class="text-sm text-content-text"><i class="fa-solid fa-star text-brand-purple mr-2"></i><strong>为什么是亮点：</strong>将 spec.md §6.2.3 的"差距高亮模式"从"虚线下划线"升级为"热力图对比"，视觉冲击力提升 10 倍，且直接呼应"反向规划——先看终点再看差距"的方法论。</p>
+      </div>
+    </div>
+
+    <!-- 创新2 -->
+    <div class="innovation-card p-6 md:p-8">
+      <div class="flex items-start gap-4 mb-5">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg, rgba(14,165,183,0.12), rgba(109,94,246,0.08));">
+          <i class="fa-solid fa-link text-brand-cyan text-lg"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="badge-severity badge-good">推荐优先级 P0</span>
+            <span class="text-xs text-content-sub">开发成本：约 1.5 天</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-content-text">创新二：「任务链路可视化」——每个任务标注"它在补哪个差距"</h3>
+        </div>
+      </div>
+
+      <p class="text-sm text-content-sub mb-4 leading-relaxed">当前任务卡片仅显示任务名称、优先级、预计时长，用户不知道"做这个任务是为了补什么差距"。新增一个<strong>链路标签</strong>：每个任务卡片底部标注"→ 补齐 [分布式系统] 技能差距 · 关联雷达图 [技术能力] 维度"，并配一个微型进度条显示该维度的当前分值。任务完成后，进度条动画推进，雷达图对应维度同步抬升。</p>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="p-4 rounded-xl bg-content-bg">
+          <p class="text-xs font-semibold text-content-text mb-2">用户感知</p>
+          <p class="text-sm text-content-sub">"做这个 React Hooks 任务是为了提升我的技术能力维度，当前 65 分→完成后预计 72 分"——<strong>每个任务有了"为什么"</strong>。这种因果可见性是反向规划的核心价值，当前产品完全没有传递。</p>
+        </div>
+        <div class="p-4 rounded-xl bg-content-bg">
+          <p class="text-xs font-semibold text-content-text mb-2">实现路径</p>
+          <p class="text-sm text-content-sub">在 <code>updateTasks()</code> 生成卡片时，从 <code>updateSkillGaps()</code> 的输出中关联 <code>related_skill</code> 和 <code>radar_dimension</code> 字段（spec.md 数据模型已定义），渲染为标签 + 微型进度条。<strong>数据已有，仅需串联渲染</strong>。</p>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-brand-cyan/5 border border-brand-cyan/15">
+        <p class="text-sm text-content-text"><i class="fa-solid fa-star text-brand-cyan mr-2"></i><strong>为什么是亮点：</strong>打通了"任务→技能→雷达图"的因果链路可视化，让用户理解"反向规划"的逻辑——"我做的每一步都在缩小与理想候选人的差距"。这是当前产品最缺的"闭环感知"。</p>
+      </div>
+    </div>
+
+    <!-- 创新3 -->
+    <div class="innovation-card p-6 md:p-8">
+      <div class="flex items-start gap-4 mb-5">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(109,94,246,0.08));">
+          <i class="fa-solid fa-wand-magic-sparkles text-state-success text-lg"></i>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="badge-severity badge-good">推荐优先级 P1</span>
+            <span class="text-xs text-content-sub">开发成本：约 1 天</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-content-text">创新三：「成长时刻回放」——雷达图变化的时间轴回放</h3>
+        </div>
+      </div>
+
+      <p class="text-sm text-content-sub mb-4 leading-relaxed">spec.md §6.5.2 要求"能力匹配度趋势折线图"，当前实现是静态的。新增<strong>时间轴回放功能</strong>：用户拖动时间轴滑块，雷达图实时重绘对应时间点的状态，配合"第 X 天：完成 [React Hooks 任务]，技术能力 48→55"的标注气泡。让用户<strong>看到自己的成长轨迹</strong>，而不只是一个静态快照。</p>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="p-4 rounded-xl bg-content-bg">
+          <p class="text-xs font-semibold text-content-text mb-2">用户感知</p>
+          <p class="text-sm text-content-sub">"一个月前我的雷达图是这样的……哇，技术能力真的涨了 20 分"——<strong>成长的可视化回放</strong>是最强的留存驱动力。spec.md §6.5.3 明确"用户的核心驱动力是看到雷达图线条在生长"，回放功能将"看到生长"升级为"回顾生长历程"。</p>
+        </div>
+        <div class="p-4 rounded-xl bg-content-bg">
+          <p class="text-xs font-semibold text-content-text mb-2">实现路径</p>
+          <p class="text-sm text-content-sub">在 <code>diagnoses</code> 表的 <code>r_data</code> 字段（spec.md §4.1.7 已定义）中存储每次诊断的雷达图快照。前端用 ECharts <code>timeline</code> 组件或自定义滑块 + <code>setOption</code> 动画。数据结构已预留，<strong>仅需前端渲染层实现</strong>。</p>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-state-success/5 border border-state-success/15">
+        <p class="text-sm text-content-text"><i class="fa-solid fa-star text-state-success mr-2"></i><strong>为什么是亮点：</strong>将 spec.md 设计但未实现的"渐进式生长动画"升级为"完整成长回放"，从"看到变化"到"回顾历程"，情感价值翻倍。对标头部健身 App（如 Keep）的训练历程回放、学习 App（如多邻国）的技能树生长动画。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 修复优先级总表 ============ -->
+<section class="max-w-6xl mx-auto px-6 py-8">
+  <div class="bg-white rounded-2xl border border-content-divider p-6 md:p-8">
+    <h2 class="font-display font-bold text-xl text-content-text mb-6">修复优先级总表</h2>
+    <table class="audit-table">
+      <thead>
+        <tr><th>优先级</th><th>问题项</th><th>影响面</th><th>预估工时</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-severity badge-fatal">P0 致命</span></td>
+          <td>L5842 <code>innerHTML = tasks</code> 数组覆盖 → 任务列表渲染崩溃</td>
+          <td>任务中心完全不可用</td>
+          <td>5 分钟（删一行）</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-fatal">P0 致命</span></td>
+          <td>核心闭环断开：任务验证→技能提升→雷达图更新→解锁新任务</td>
+          <td>反向规划核心价值落空</td>
+          <td>2-3 天</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-fatal">P0 致命</span></td>
+          <td>移动端零适配（无 <code>@media</code> 断点）</td>
+          <td>手机端基本不可用</td>
+          <td>2-3 天</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-high">P1 高</span></td>
+          <td>4 个空壳函数（refreshQueue/applyFilter/markAllRead/updateJobMatchScores）</td>
+          <td>假交互挫败感</td>
+          <td>0.5 天</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-high">P1 高</span></td>
+          <td>handleSearch() 重复定义，搜索路由逻辑丢失</td>
+          <td>搜索功能不符合预期</td>
+          <td>0.5 小时</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-high">P1 高</span></td>
+          <td>任务提交无加载状态/不更新UI/可重复提交</td>
+          <td>用户不知是否成功</td>
+          <td>1 天</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-medium">P2 中</span></td>
+          <td>色彩系统双重标准（#6D5EF6 vs #7B4FE0 混用）</td>
+          <td>视觉一致性</td>
+          <td>2 小时（全局替换）</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-medium">P2 中</span></td>
+          <td>L4230 <code>color:linear-gradient()</code> 无效CSS</td>
+          <td>图标渐变不可见</td>
+          <td>10 分钟</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-medium">P2 中</span></td>
+          <td>多处 <code>href="#"</code> 死链 + 原生 confirm/prompt 混用</td>
+          <td>交互不一致</td>
+          <td>0.5 天</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-low">P3 低</span></td>
+          <td>Google Fonts CDN 国内加载不稳定</td>
+          <td>首屏闪烁</td>
+          <td>0.5 小时</td>
+        </tr>
+        <tr>
+          <td><span class="badge-severity badge-low">P3 低</span></td>
+          <td>卡片间距不统一 / 按钮高度微偏</td>
+          <td>视觉精致度</td>
+          <td>1 小时</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ Footer ============ -->
+<footer class="max-w-6xl mx-auto px-6 py-12">
+  <div class="border-t border-content-divider pt-8">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div>
+        <p class="font-display font-bold text-sm text-content-text">《职引未来》产品优化改进报告</p>
+        <p class="text-xs text-content-sub mt-1">由资深产品体验官出具 · 对标头部小程序标准 · 2026-07-29</p>
+      </div>
+      <div class="flex items-center gap-4 text-xs text-content-sub">
+        <span><i class="fa-solid fa-code mr-1"></i>6801 行代码审计</span>
+        <span><i class="fa-solid fa-bug mr-1"></i>37 项问题定位</span>
+        <span><i class="fa-solid fa-lightbulb mr-1"></i>3 项微创新方案</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
