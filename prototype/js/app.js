@@ -3332,7 +3332,7 @@ ${r.skills.length ? `<h2>技能清单</h2><div class="skills">${r.skills.map(s =
 
     // 代理服务器地址（支持动态配置）
     // 部署后可通过 window.__AI_PROXY_URL 或 localStorage 设置 Render 后端地址
-    const PROXY_URL = window.__AI_PROXY_URL || localStorage.getItem('aiProxyUrl') || 'http://localhost:3456';
+    const PROXY_URL = window.__AI_PROXY_URL || localStorage.getItem('aiProxyUrl') || 'https://zhiyin-ai-server-psne48ksc-career-feature.vercel.app';
     let proxyAvailable = false;
 
     async function checkProxy() {
