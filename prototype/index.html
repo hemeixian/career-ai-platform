@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>职引未来 · AI 全周期职业发展平台</title>
+
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<!-- Google Fonts: Sora (display) + Plus Jakarta Sans (body) + Noto Sans SC (CN) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<!-- ECharts CDN -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            dark: '#0A0A14',
+            dark2: '#11111E',
+            purple: '#6D5EF6',
+            purpleDeep: '#5B4BD6',
+            purpleLight: '#8B7FF8',
+            cyan: '#0EA5B7',
+            cyanDeep: '#0B7A8A',
+            amber: '#F59E0B',
+          },
+          content: {
+            bg: '#F7F7F9',
+            card: '#FFFFFF',
+            text: '#16161A',
+            sub: '#6B6B76',
+            divider: '#E8E8EC',
+            nav: '#D1D1D8',
+          },
+          state: {
+            success: '#10B981',
+            warning: '#F59E0B',
+            danger: '#F43F5E',
+          },
+        },
+        fontFamily: {
+          display: ['Sora', '"Noto Sans SC"', 'sans-serif'],
+          body: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        boxShadow: {
+          card: '0 1px 2px rgba(16,16,26,0.04), 0 4px 16px rgba(16,16,26,0.05)',
+          'card-hover': '0 4px 12px rgba(109,94,246,0.10), 0 16px 40px rgba(16,16,26,0.08)',
+          glow: '0 0 0 4px rgba(109,94,246,0.12)',
+          'glow-strong': '0 0 0 6px rgba(109,94,246,0.18)',
+          'cyan-glow': '0 0 0 4px rgba(14,165,183,0.12)',
+        },
+        borderRadius: {
+          card: '14px',
+          modal: '18px',
+        },
+      },
+    },
+  };
+</script>
+
+  <link rel="stylesheet" href="styles.css?v=20250730">
+  <link rel="stylesheet" href="js/components.css?v=20250730">
+</head>
+
+<body class="font-body">
+
+  <!-- ============ AUTH PAGE (Login/Register) ============ -->
+  <div id="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo"><i class="fa-solid fa-compass"></i></div>
+        <h2 class="font-display font-bold text-2xl">职引未来</h2>
+        <p class="text-white/80 text-sm mt-1">AI 驱动的大学生职业规划平台</p>
+      </div>
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登录</div>
+        <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">注册</div>
+      </div>
+      <div class="auth-body">
+        <!-- Login Form -->
+        <div id="form-login">
+          <div class="auth-input-wrap">
+            <i class="fa-regular fa-envelope"></i>
+            <input id="login-email" type="email" class="input auth-input w-full" placeholder="请输入邮箱 / 手机号">
+          </div>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input id="login-pwd" type="password" class="input auth-input auth-input-right w-full" placeholder="请输入密码" style="padding-top:12px;padding-bottom:12px">
+            <i class="fa-regular fa-eye eye-icon" id="login-eye" onclick="togglePwd('login-pwd','login-eye')"></i>
+          </div>
+          <div id="login-password-strength" class="password-strength" style="margin-bottom:8px">
+            <div class="password-strength-bar">
+              <div class="password-strength-segment" data-level="0"></div>
+              <div class="password-strength-segment" data-level="1"></div>
+              <div class="password-strength-segment" data-level="2"></div>
+            </div>
+            <span class="password-strength-label">弱</span>
+          </div>
+          <div class="flex items-center justify-between mb-4 text-[13px]">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked class="accent-brand-purple w-4 h-4">
+              <span class="text-content-sub">记住我</span>
+            </label>
+            <a class="text-brand-purple hover:underline cursor-pointer" onclick="showToast('重置密码链接已发送至邮箱','check')">忘记密码？</a>
+          </div>
+          <button class="btn-primary w-full py-3 rounded-xl text-sm font-semibold" onclick="doLogin()">
+            <i class="fa-solid fa-right-to-bracket mr-1.5"></i>登 录
+          </button>
+          <div class="flex items-center gap-3 my-5">
+            <div class="flex-1 h-px bg-gray-200"></div>
+            <span class="text-[11px] text-gray-400">其他方式登录</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+          <div class="social-login">
+            <div class="social-btn" style="color:#07C160" onclick="quickLogin('微信')"><i class="fa-brands fa-weixin"></i></div>
+            <div class="social-btn" style="color:#1296DB" onclick="quickLogin('QQ')"><i class="fa-brands fa-qq"></i></div>
+            <div class="social-btn" style="color:#E6162D" onclick="quickLogin('微博')"><i class="fa-brands fa-weibo"></i></div>
+          </div>
+          <p class="text-center text-[11px] text-gray-400 mt-5">登录即代表同意 <span class="text-brand-purple cursor-pointer">用户协议</span> 和 <span class="text-brand-purple cursor-pointer">隐私政策</span></p>
+        </div>
+        <!-- Register Form -->
+        <div id="form-register" class="hidden">
+          <!-- 步骤提示 -->
+          <div class="register-steps">
+            <div class="register-step active">
+              <div class="register-step-icon">1</div>
+              <span>填写信息</span>
+            </div>
+            <div class="register-step-line"></div>
+            <div class="register-step">
+              <div class="register-step-icon">2</div>
+              <span>兴趣偏好</span>
+            </div>
+            <div class="register-step-line"></div>
+            <div class="register-step">
+              <div class="register-step-icon">3</div>
+              <span>职业画像</span>
+            </div>
+            <div class="register-step-line"></div>
+            <div class="register-step">
+              <div class="register-step-icon">4</div>
+              <span>开始</span>
+            </div>
+          </div>
+          
+          <!-- 欢迎区 -->
+          <div class="register-welcome">
+            <div class="register-welcome-icon">🎯</div>
+            <div class="register-welcome-title">开启你的专属职业规划之旅</div>
+            <div class="register-welcome-desc">仅需几步，AI 将为你定制个性化职业发展路径</div>
+          </div>
+          
+          <!-- 头像上传 -->
+          <div class="register-avatar-section">
+            <div id="reg-avatar-uploader" class="register-avatar-uploader">
+              <div class="register-avatar-circle" id="reg-avatar-circle">
+                <img id="reg-avatar-img" style="display:none" />
+                <div class="register-avatar-placeholder" id="reg-avatar-placeholder">
+                  <i class="fa-solid fa-user-plus"></i>
+                  <span>上传头像</span>
+                </div>
+                <div class="register-avatar-camera">
+                  <i class="fa-solid fa-camera"></i>
+                </div>
+              </div>
+              <div class="register-avatar-hint">
+                <span id="reg-avatar-hint-text">点击上传头像</span>
+                <span class="text-content-muted">·</span>
+                <a id="reg-avatar-generate" class="text-brand-purple hover:underline cursor-pointer">生成字母头像</a>
+                <span class="text-content-muted">·</span>
+                <a id="reg-avatar-skip" class="text-content-sub hover:text-brand-purple cursor-pointer">跳过</a>
+              </div>
+              <input type="file" id="reg-avatar-file" accept="image/jpeg,image/png,image/webp" style="display:none" />
+            </div>
+          </div>
+          
+          <!-- 昵称 -->
+          <div class="auth-input-wrap" id="nickname-field">
+            <i class="fa-regular fa-user"></i>
+            <input id="reg-name" type="text" class="input auth-input w-full" placeholder="你的昵称（2-12个字符）" maxlength="12">
+          </div>
+          <div class="form-field" id="nickname-feedback" style="display:none"></div>
+          
+          <!-- 邮箱 -->
+          <div class="auth-input-wrap">
+            <i class="fa-regular fa-envelope"></i>
+            <input id="reg-email" type="email" class="input auth-input w-full" placeholder="邮箱（用于接收报告）">
+          </div>
+          <div class="form-field" id="email-feedback" style="display:none"></div>
+          
+          <!-- 密码 -->
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input id="reg-pwd" type="password" class="input auth-input auth-input-right w-full" placeholder="设置密码（≥6位）">
+            <i class="fa-regular fa-eye eye-icon" id="reg-eye" onclick="togglePwd('reg-pwd','reg-eye')"></i>
+          </div>
+          <div id="reg-password-strength" class="password-strength" style="margin-bottom:8px">
+            <div class="password-strength-bar">
+              <div class="password-strength-segment" data-level="0"></div>
+              <div class="password-strength-segment" data-level="1"></div>
+              <div class="password-strength-segment" data-level="2"></div>
+            </div>
+            <span class="password-strength-label">弱</span>
+          </div>
+          
+          <!-- 确认密码 -->
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input id="reg-pwd-confirm" type="password" class="input auth-input auth-input-right w-full" placeholder="确认密码">
+            <i class="fa-regular fa-eye eye-icon" id="reg-eye-confirm" onclick="togglePwd('reg-pwd-confirm','reg-eye-confirm')"></i>
+          </div>
+          <div id="reg-password-match" class="password-match"></div>
+          
+          <!-- 年级 -->
+          <div style="margin:8px 0 16px">
+            <label class="block text-[12px] font-semibold mb-1.5 text-content-text">年级</label>
+            <div id="reg-grade-selector" data-unified-select 
+                 data-placeholder="请选择年级" 
+                 data-options="grades"></div>
+          </div>
+          <input id="reg-grade" type="hidden" value="">
+          
+          <!-- 注册按钮 -->
+          <button class="btn-flow w-full py-3 rounded-xl text-sm font-semibold" onclick="doRegister()">
+            <i class="fa-solid fa-sparkles mr-1.5"></i>注 册 并 开 始
+          </button>
+          
+          <!-- 社交登录 -->
+          <div class="social-divider">
+            <div class="social-divider-line"></div>
+            <span class="social-divider-text">或使用以下方式注册</span>
+            <div class="social-divider-line"></div>
+          </div>
+          <div class="social-login">
+            <div class="social-btn" style="color:#07C160" onclick="quickLogin('微信')"><i class="fa-brands fa-weixin"></i></div>
+            <div class="social-btn" style="color:#1296DB" onclick="quickLogin('QQ')"><i class="fa-brands fa-qq"></i></div>
+            <div class="social-btn" style="color:#333" onclick="quickLogin('GitHub')"><i class="fa-brands fa-github"></i></div>
+          </div>
+          
+          <!-- 已有账号 -->
+          <p class="text-center text-[12px] text-gray-500 mt-4">
+            已有账号？<span class="text-brand-purple cursor-pointer hover:underline" onclick="switchAuthTab('login')">去登录 →</span>
+          </p>
+        </div>
+        <!-- Removed: Q search box was here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ONBOARDING FLOW ============ -->
+  <div id="onboarding-page" class="hidden">
+    <div class="onboard-card">
+      <div class="onboard-progress">
+        <div class="onboard-dot active" id="ob-dot-0"></div>
+        <div class="onboard-dot" id="ob-dot-1"></div>
+        <div class="onboard-dot" id="ob-dot-2"></div>
+        <div class="onboard-dot" id="ob-dot-3"></div>
+      </div>
+      <div class="onboard-step-num" id="ob-step-label">第 1 步 / 共 4 步</div>
+      <div class="onboard-body">
+
+        <!-- Step 0: Welcome + Identity -->
+        <div id="ob-step-0">
+          <h2 class="font-display font-bold text-2xl text-content-text text-center mb-1">你好 👋 欢迎加入职引未来</h2>
+          <p class="text-center text-content-sub text-sm mb-6">先告诉我，你现在是？这能帮我们更好地为你规划</p>
+          <div class="grid grid-cols-2 gap-3 mb-6" id="identity-grid">
+            <div class="identity-card" data-val="在校学生" onclick="selectIdentity(this)">
+              <div class="identity-icon">🎓</div>
+              <div class="identity-name">在校学生</div>
+              <div class="identity-desc">寻找实习 / 校招方向</div>
+            </div>
+            <div class="identity-card" data-val="应届毕业生" onclick="selectIdentity(this)">
+              <div class="identity-icon">🚀</div>
+              <div class="identity-name">应届毕业生</div>
+              <div class="identity-desc">正在求职找工作</div>
+            </div>
+            <div class="identity-card" data-val="研硕博" onclick="selectIdentity(this)">
+              <div class="identity-icon">📚</div>
+              <div class="identity-name">研究生/博士</div>
+              <div class="identity-desc">深化研究或转方向</div>
+            </div>
+            <div class="identity-card" data-val="已工作想转行" onclick="selectIdentity(this)">
+              <div class="identity-icon">💼</div>
+              <div class="identity-name">已工作想转行</div>
+              <div class="identity-desc">探索新职业方向</div>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button class="btn-primary px-6 py-2.5 rounded-lg text-sm" onclick="nextObStep(1)" id="ob-btn-0" disabled style="opacity:0.5;cursor:not-allowed">
+              下一步 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 1: Interest Tags (小红书风格) -->
+        <div id="ob-step-1" class="hidden">
+          <h2 class="font-display font-bold text-2xl text-content-text text-center mb-1">选择你感兴趣的方向 ✨</h2>
+          <p class="text-center text-content-sub text-sm mb-5">选择你感兴趣的领域标签（至少选择 3 个），我们会据此推荐相关岗位和学习路径</p>
+          <div id="ob-tags-wrap">
+            <div class="tag-category">
+              <div class="tag-category-title"><i class="fa-solid fa-code text-brand-purple"></i> 技术开发</div>
+              <div class="tag-grid">
+                <span class="onboard-tag" onclick="toggleObTag(this)">前端开发</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">后端开发</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">移动开发</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">算法/AI</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">数据开发</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">游戏开发</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">网络安全</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">嵌入式开发</span>
+              </div>
+            </div>
+            <div class="tag-category">
+              <div class="tag-category-title"><i class="fa-solid fa-palette text-brand-cyan"></i> 设计 / 创意</div>
+              <div class="tag-grid">
+                <span class="onboard-tag" onclick="toggleObTag(this)">UI/UX 设计</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">视觉设计</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">交互设计</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">3D/动效</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">游戏美术</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">视频剪辑</span>
+              </div>
+            </div>
+            <div class="tag-category">
+              <div class="tag-category-title"><i class="fa-solid fa-lightbulb" style="color:#F59E0B"></i> 产品 / 运营</div>
+              <div class="tag-grid">
+                <span class="onboard-tag" onclick="toggleObTag(this)">产品经理</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">产品运营</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">内容运营</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">用户增长</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">市场营销</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">品牌策划</span>
+              </div>
+            </div>
+            <div class="tag-category">
+              <div class="tag-category-title"><i class="fa-solid fa-chart-line" style="color:#10B981"></i> 商业 / 数据</div>
+              <div class="tag-grid">
+                <span class="onboard-tag" onclick="toggleObTag(this)">数据分析</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">商业分析</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">金融/投行</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">咨询</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">人力资源</span>
+                <span class="onboard-tag" onclick="toggleObTag(this)">财务会计</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6 pt-4" style="border-top:1px solid #f0f1f5">
+            <span class="text-[12px] text-content-sub" id="ob-tag-count">已选 0 个标签</span>
+            <div class="flex gap-3">
+              <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="nextObStep(0)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i>上一步</button>
+              <button class="btn-primary px-6 py-2.5 rounded-lg text-sm" onclick="nextObStep(2)" id="ob-btn-1" disabled style="opacity:0.5;cursor:not-allowed">
+                下一步 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: AI Conversation -->
+        <div id="ob-step-2" class="hidden">
+          <h2 class="font-display font-bold text-2xl text-content-text text-center mb-1">和 AI 职业规划师聊聊 🤖</h2>
+          <p class="text-center text-content-sub text-sm mb-4">告诉我你的困惑，我会帮你分析方向、给出建议</p>
+          <div class="ai-chat-wrap" id="ai-chat"></div>
+          <div id="ai-replies"></div>
+          <div class="mt-4 relative">
+            <input id="ai-chat-input" type="text" class="w-full px-4 py-3 pr-24 rounded-xl border border-gray-200 focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 outline-none text-sm transition" placeholder="输入你想问的问题，比如：我该怎么入门？这个方向前景如何？" onkeydown="if(event.key==='Enter')sendUserMessage()">
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <button id="ai-config-btn" class="relative w-9 h-9 rounded-lg hover:bg-content-divider flex items-center justify-center text-content-sub hover:text-brand-purple transition" title="配置 AI API Key" onclick="toggleAIConfig()">
+                <i class="fa-solid fa-gear text-sm"></i>
+                <span id="ai-connected-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full hidden"></span>
+              </button>
+              <button class="w-9 h-9 rounded-lg bg-gradient-to-r from-[#6d5ef6] to-[#0ea5b7] text-white flex items-center justify-center hover:opacity-90 transition" onclick="sendUserMessage()">
+                <i class="fa-solid fa-paper-plane text-sm"></i>
+              </button>
+            </div>
+          </div>
+          <!-- API Key 配置面板 -->
+          <div id="ai-config-panel" class="hidden mt-2 p-3 rounded-xl border border-content-divider" style="background:#fafbfd">
+            <div class="flex items-center gap-2 mb-2.5">
+              <i class="fa-solid fa-key text-brand-purple text-xs"></i>
+              <span class="text-xs font-semibold text-content-text">AI 引擎配置</span>
+              <span id="ai-status-badge" class="text-[10px] px-1.5 py-0.5 rounded-full"></span>
+            </div>
+            <!-- 平台选择 -->
+            <div class="grid grid-cols-3 gap-2 mb-2.5">
+              <button class="ai-provider-btn text-left p-2.5 rounded-lg border border-content-divider hover:border-brand-purple transition" data-provider="zhipu" onclick="switchAIProvider('zhipu')">
+                <div class="text-xs font-semibold">智谱 Flash</div>
+                <div class="text-[10px] text-state-success mt-0.5">永久免费</div>
+              </button>
+              <button class="ai-provider-btn text-left p-2.5 rounded-lg border border-content-divider hover:border-brand-purple transition" data-provider="siliconflow" onclick="switchAIProvider('siliconflow')">
+                <div class="text-xs font-semibold">硅基流动</div>
+                <div class="text-[10px] text-state-success mt-0.5">2000万Token</div>
+              </button>
+              <button class="ai-provider-btn text-left p-2.5 rounded-lg border border-content-divider hover:border-brand-purple transition" data-provider="deepseek" onclick="switchAIProvider('deepseek')">
+                <div class="text-xs font-semibold">DeepSeek</div>
+                <div class="text-[10px] text-content-sub mt-0.5">按量付费</div>
+              </button>
+            </div>
+            <!-- Key 输入 -->
+            <div class="flex gap-2">
+              <input id="ai-key-input" type="password" class="flex-1 px-3 py-2 text-xs rounded-lg border border-gray-200 focus:border-brand-purple outline-none" placeholder="输入 API Key..." onkeydown="if(event.key==='Enter')saveAPIKey()">
+              <button class="btn-primary px-3 py-2 rounded-lg text-xs whitespace-nowrap" onclick="saveAPIKey()">保存</button>
+            </div>
+            <p class="text-[10px] text-content-sub mt-1.5">获取 Key：<a id="ai-key-link" href="https://open.bigmodel.cn/usercenter/apikeys" target="_blank" class="text-brand-purple hover:underline">点击前往平台获取</a> · 未配置时使用本地回复</p>
+          </div>
+          <div class="flex items-center justify-between mt-4 pt-4" style="border-top:1px solid #f0f1f5">
+            <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="nextObStep(1)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i>上一步</button>
+            <button class="btn-primary px-6 py-2.5 rounded-lg text-sm" onclick="finishOnboarding()">
+              进入工作台 <i class="fa-solid fa-rocket ml-1.5 text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Generating profile -->
+        <div id="ob-step-3" class="hidden text-center py-8">
+          <div class="relative w-20 h-20 mx-auto mb-5">
+            <div class="absolute inset-0 rounded-full" style="background: linear-gradient(135deg,#6d5ef6,#0ea5b7); animation: spin 1.2s linear infinite;"></div>
+            <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center">
+              <i class="fa-solid fa-wand-magic-sparkles text-2xl text-brand-purple"></i>
+            </div>
+          </div>
+          <h2 class="font-display font-bold text-xl text-content-text mb-2">AI 正在为你生成专属画像...</h2>
+          <p class="text-content-sub text-sm" id="ob-loading-text">分析兴趣标签中...</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ APP CONTAINER ============ -->
+  <div id="app-container" class="hidden">
+    <div class="flex min-h-screen w-full" style="padding-left: 24px; padding-right: 24px;">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar w-[240px] flex-shrink-0 flex flex-col h-screen sticky top-0">
+      <!-- Logo -->
+      <div class="px-6 pt-7 pb-6">
+        <div class="flex items-center gap-3">
+          <div class="logo-orb w-10 h-10 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-compass text-white text-lg"></i>
+          </div>
+          <div>
+            <div class="font-display font-extrabold text-white text-[17px] leading-tight tracking-tight">职引未来</div>
+            <div class="text-[10px] text-brand-cyan font-display tracking-[0.18em] uppercase">Career · Engine</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <nav class="flex-1 px-3 space-y-1 overflow-y-auto">
+        <div class="px-3 pt-2 pb-2 text-[10px] font-display tracking-[0.18em] uppercase text-gray-500">主导航</div>
+        <a class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="dashboard">
+          <i class="nav-icon fa-solid fa-gauge-high w-5 text-center text-[15px]"></i>
+          <span>工作台</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="planning">
+          <i class="nav-icon fa-solid fa-bullseye w-5 text-center text-[15px]"></i>
+          <span>职业规划</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="resume">
+          <i class="nav-icon fa-solid fa-file-lines w-5 text-center text-[15px]"></i>
+          <span>理想简历</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="diagnosis">
+          <i class="nav-icon fa-solid fa-magnifying-glass-chart w-5 text-center text-[15px]"></i>
+          <span>技能诊断</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="assessment">
+          <i class="nav-icon fa-solid fa-brain w-5 text-center text-[15px]"></i>
+          <span>职业测评</span>
+          <span class="ml-auto badge badge-cyan">HOT</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="tasks">
+          <i class="nav-icon fa-solid fa-list-check w-5 text-center text-[15px]"></i>
+          <span>任务中心</span>
+          <span class="ml-auto badge badge-purple">3</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="profile">
+          <i class="nav-icon fa-solid fa-user w-5 text-center text-[15px]"></i>
+          <span>个人中心</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="interview">
+          <i class="nav-icon fa-solid fa-microphone-lines w-5 text-center text-[15px]"></i>
+          <span>AI 模拟面试</span>
+          <span class="ml-auto badge badge-purple">NEW</span>
+        </a>
+        <a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-page="market">
+          <i class="nav-icon fa-solid fa-briefcase w-5 text-center text-[15px]"></i>
+          <span>岗位市场</span>
+        </a>
+
+        <div class="px-3 pt-6 pb-2 text-[10px] font-display tracking-[0.18em] uppercase text-gray-500">即将上线</div>
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-600 cursor-not-allowed">
+          <i class="fa-solid fa-building-columns w-5 text-center text-[15px]"></i>
+          <span>面试中心</span>
+          <span class="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">SOON</span>
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-600 cursor-not-allowed">
+          <i class="fa-solid fa-chart-line w-5 text-center text-[15px]"></i>
+          <span>行业趋势</span>
+          <span class="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">SOON</span>
+        </div>
+      </nav>
+
+      <!-- User card -->
+      <div class="p-3">
+        <div id="sidebar-user-card" class="rounded-xl p-3 flex items-center gap-3 cursor-pointer transition hover:bg-white/8" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);" onclick="toggleUserMenu(event)" title="点击管理账号 / 查看个人信息">
+          <div class="avatar-ring">
+            <img id="sidebar-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop&crop=faces" class="w-9 h-9 rounded-full" alt="用户头像" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div id="sidebar-name" class="text-white text-[13px] font-semibold truncate">张明</div>
+            <div id="sidebar-meta" class="text-[11px] text-gray-400 truncate">计算机科学 · 大三</div>
+          </div>
+          <i class="fa-solid fa-arrows-rotate text-gray-400 text-xs transition hover:text-white" title="切换账号"></i>
+        </div>
+
+        <!-- Account / profile dropdown -->
+        <div id="user-dropdown" class="hidden absolute z-50 left-3 right-3 bottom-[84px] rounded-xl overflow-hidden" style="background:#11111E;border:1px solid rgba(255,255,255,0.08);box-shadow:0 12px 32px rgba(0,0,0,0.4)">
+          <div class="px-3 py-2 text-[10px] tracking-[0.18em] uppercase text-gray-500 font-display" style="border-bottom:1px solid rgba(255,255,255,0.06)">切换账号</div>
+          <div id="account-list" class="py-1"></div>
+          <div class="border-t" style="border-color:rgba(255,255,255,0.06)">
+            <button class="w-full text-left px-3 py-2.5 text-[12px] text-gray-300 hover:bg-white/5 hover:text-white transition flex items-center gap-2" onclick="switchPage('profile'); closeUserMenu()">
+              <i class="fa-solid fa-user w-4 text-center text-[11px] text-brand-purpleLight"></i>查看个人中心
+            </button>
+            <button class="w-full text-left px-3 py-2.5 text-[12px] text-gray-300 hover:bg-white/5 hover:text-white transition flex items-center gap-2" onclick="showToast('设置面板开发中','info'); closeUserMenu()">
+              <i class="fa-solid fa-gear w-4 text-center text-[11px] text-gray-400"></i>设置
+            </button>
+            <button class="w-full text-left px-3 py-2.5 text-[12px] text-state-danger/80 hover:bg-state-danger/10 hover:text-state-danger transition flex items-center gap-2" onclick="confirmLogout()">
+              <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center text-[11px]"></i>退出登录
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="flex-1 min-w-0">
+      <!-- Top bar -->
+      <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-content-divider">
+        <div class="px-8 py-3.5 flex items-center gap-4">
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-content-sub">职引未来</span>
+            <i class="fa-solid fa-angle-right text-[10px] text-content-sub"></i>
+            <span id="breadcrumb" class="font-semibold text-content-text">工作台</span>
+          </div>
+          <div class="ml-auto flex items-center gap-3">
+            <div class="relative" id="search-wrap">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-content-sub text-xs"></i>
+              <input id="global-search" type="text" placeholder="搜索岗位、技能、任务..." class="input pl-8 pr-12 py-2 w-64 text-[13px]" oninput="handleSearchInput()" onkeydown="handleSearchKey(event)" onfocus="handleSearchInput()" />
+              <span class="kbd absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer" onclick="handleSearch()" title="点击搜索">⌘K</span>
+              <div class="search-dropdown" id="search-dropdown"></div>
+            </div>
+            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background:#10B981"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2" style="background:#10B981"></span>
+              </span>
+              <span class="text-[11px] font-semibold" style="color:#10B981">AI在线</span>
+            </div>
+            <button class="relative w-9 h-9 rounded-lg border border-content-divider hover:border-brand-purple hover:text-brand-purple transition flex items-center justify-center text-content-sub" title="通知" onclick="openNotifications()">
+              <i class="fa-regular fa-bell text-sm"></i>
+              <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-state-danger rounded-full"></span>
+            </button>
+            <button class="w-9 h-9 rounded-lg border border-content-divider hover:border-brand-purple hover:text-brand-purple transition flex items-center justify-center text-content-sub" title="帮助" onclick="openHelp()">
+              <i class="fa-regular fa-circle-question text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============ PAGES ============ -->
+      <div class="p-8 max-w-[1280px] mx-auto">
+
+        <!-- Pages loaded via fetch (see script) -->
+        <div id="pages-host"></div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modals loaded via fetch (see script) -->
+  <div id="modals-host"></div>
+
+
+  <script src="js/constants.js?v=20250730"></script>
+  <script src="js/components.js?v=20250730"></script>
+  <script src="js/app.js?v=20250730"></script>
+  </div><!-- end app-container -->
+
+  <!-- ============ AI FLOATING ASSISTANT ============ -->
+  <div id="ai-assistant" class="hidden">
+    <!-- Floating Button -->
+    <div id="ai-assistant-btn" class="ai-assistant-btn" onclick="toggleAssistant()">
+      <div class="ai-btn-ripple"></div>
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span class="ai-btn-badge">1</span>
+    </div>
+
+    <!-- Chat Panel -->
+    <div id="ai-assistant-panel" class="ai-assistant-panel hidden">
+      <!-- Header -->
+      <div class="ai-panel-header">
+        <div class="ai-panel-title">
+          <div class="ai-panel-avatar">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <div class="ai-panel-name">小职 AI 助手</div>
+            <div class="ai-panel-status"><span class="status-dot"></span>在线 · 随时为你解答</div>
+          </div>
+        </div>
+        <div class="ai-panel-actions">
+          <button class="ai-panel-btn" onclick="minimizeAssistant()" title="最小化">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <button class="ai-panel-btn" onclick="toggleAssistant()" title="关闭">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Context hint -->
+      <div class="ai-context-hint" id="ai-context-hint">
+        <i class="fa-solid fa-lightbulb"></i>
+        <span id="ai-context-text">你好！我是小职，可以帮你更好地使用这个平台 ✨</span>
+      </div>
+
+      <!-- Chat messages -->
+      <div class="ai-panel-messages" id="ai-panel-messages">
+        <div class="ai-msg bot">
+          <div class="ai-avatar bot"><i class="fa-solid fa-robot"></i></div>
+          <div class="ai-bubble" id="ai-welcome-msg">
+            你好 <span id="ai-user-greeting">👋</span> 我是你的 AI 助手小职。
+            <br><br>我可以指引你使用这个平台的各项功能，帮你更快上手。你可以直接输入问题，也可以点击下方的快捷提问。
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick replies -->
+      <div class="ai-panel-quick" id="ai-panel-quick">
+        <!-- Dynamically generated based on context -->
+      </div>
+
+      <!-- Input area -->
+      <div class="ai-panel-input">
+        <input type="text" id="ai-panel-input" placeholder="问问我吧，比如：怎么开始？" onkeydown="if(event.key==='Enter')sendAssistantMsg()">
+        <button class="ai-panel-send" onclick="sendAssistantMsg()">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</body></html>
