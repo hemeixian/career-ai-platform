@@ -1,0 +1,25 @@
+  <!-- ============ ASSESSMENT RESULT MODAL ============ -->
+  <div id="result-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[720px] max-w-[94vw] max-h-[90vh] overflow-hidden flex flex-col">
+      <div class="px-6 py-5 text-center" style="background:linear-gradient(135deg,#6D5EF6,#0EA5B7)">
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
+          <i class="fa-solid fa-award text-white text-3xl"></i>
+        </div>
+        <h3 id="result-title" class="font-display font-bold text-xl text-white mb-1">测评完成！</h3>
+        <p id="result-subtitle" class="text-white/80 text-sm">你的测评结果已生成</p>
+      </div>
+
+      <div id="result-content" class="flex-1 overflow-y-auto p-6">
+        <!-- Result content will be rendered here -->
+      </div>
+
+      <div class="px-6 py-4 flex items-center justify-center gap-3 border-t border-content-divider" style="background:#FAFBFC">
+        <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="closeResultModal()">
+          稍后查看
+        </button>
+        <button class="btn-primary px-5 py-2.5 rounded-lg text-sm" onclick="closeResultModal(); switchPage('assessment')">
+          <i class="fa-solid fa-chart-pie mr-1.5"></i>查看完整报告
+        </button>
+      </div>
+    </div>
+  </div>
