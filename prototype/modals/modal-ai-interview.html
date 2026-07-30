@@ -1,0 +1,41 @@
+  <!-- ============ AI INTERVIEW MODAL ============ -->
+  <div id="ai-interview-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[720px] max-w-[94vw] h-[600px] max-h-[90vh] overflow-hidden flex flex-col">
+      <div class="px-6 py-4 flex items-center justify-between border-b border-content-divider" style="background:linear-gradient(135deg,rgba(109,94,246,0.08),rgba(14,165,183,0.05))">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#6D5EF6,#0EA5B7)">
+            <i class="fa-solid fa-robot text-white"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-content-text">AI 职业规划师 · 小职</h3>
+            <p class="text-[11px] text-content-sub">通过对话深入了解你的职业特质</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg hover:bg-white/60 flex items-center justify-center text-content-sub hover:text-content-text transition" onclick="closeAIInterview()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50">
+        <!-- Chat messages will be rendered here -->
+      </div>
+
+      <div class="px-5 py-4 border-t border-content-divider bg-white">
+        <div id="quick-replies" class="flex flex-wrap gap-2 mb-3">
+          <!-- Quick reply buttons -->
+        </div>
+        <div class="flex items-end gap-3">
+          <div class="flex-1 relative">
+            <textarea id="chat-input" class="input w-full resize-none pr-12" rows="2" placeholder="输入你的回答..." onkeydown="handleChatKeydown(event)"></textarea>
+          </div>
+          <button id="chat-send" class="btn-primary px-5 py-3 rounded-xl h-[50px]" onclick="sendChatMessage()">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+        <div class="flex items-center justify-between mt-2 text-[11px] text-content-sub">
+          <span><i class="fa-solid fa-shield-halved text-brand-cyan mr-1"></i>对话内容仅用于生成职业画像，严格保密</span>
+          <span id="interview-progress">访谈进度：0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
