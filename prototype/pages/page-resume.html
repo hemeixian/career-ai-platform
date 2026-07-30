@@ -1,0 +1,422 @@
+        <!-- ===== PAGE: 理想简历 (RESUME) ===== -->
+        <section id="page-resume" class="page">
+          <div class="flex items-center justify-between mb-5 gap-4">
+            <div>
+              <div class="eyebrow mb-2">AI · RESUME LAB</div>
+              <h1 class="font-display font-extrabold text-3xl text-content-text">AI 简历诊断工坊</h1>
+              <p class="text-content-sub mt-2 text-[15px]">上传或粘贴简历 → AI 智能诊断 → 生成差距报告</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="card p-3 flex items-center gap-3 flex-shrink-0">
+                <i class="fa-solid fa-eye text-brand-purple"></i>
+                <div>
+                  <div class="text-sm font-semibold text-content-text">差距高亮</div>
+                  <div class="text-[11px] text-content-sub">标记未达成项</div>
+                </div>
+                <div id="gap-toggle" class="toggle on" onclick="toggleGap()"></div>
+              </div>
+              <button class="card p-3 flex items-center gap-2 flex-shrink-0 hover:border-brand-purple cursor-pointer transition" onclick="toggleTemplateDrawer()">
+                <i class="fa-solid fa-book-open text-brand-purple"></i>
+                <div>
+                  <div class="text-sm font-semibold text-content-text">参考理想样板</div>
+                  <div class="text-[11px] text-content-sub">目标岗位 <span id="resume-target-job" class="text-brand-purple font-semibold">前端开发工程师</span></div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 三步流程指示器 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center justify-center gap-3">
+              <div class="flex flex-col items-center gap-1.5 flow-indicator-item" id="flow-ind-1">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-purple to-brand-cyan flex items-center justify-center text-white font-bold text-sm shadow-md">1</div>
+                <div class="text-[12px] font-semibold text-content-text">上传/粘贴</div>
+              </div>
+              <div class="flex-1 h-0.5 bg-content-divider max-w-[80px]" id="flow-line-1"></div>
+              <div class="flex flex-col items-center gap-1.5 flow-indicator-item" id="flow-ind-2">
+                <div class="w-9 h-9 rounded-full bg-content-bg border-2 border-content-divider flex items-center justify-center text-content-sub font-bold text-sm">2</div>
+                <div class="text-[12px] font-medium text-content-sub">AI 诊断</div>
+              </div>
+              <div class="flex-1 h-0.5 bg-content-divider max-w-[80px]" id="flow-line-2"></div>
+              <div class="flex flex-col items-center gap-1.5 flow-indicator-item" id="flow-ind-3">
+                <div class="w-9 h-9 rounded-full bg-content-bg border-2 border-content-divider flex items-center justify-center text-content-sub font-bold text-sm">3</div>
+                <div class="text-[12px] font-medium text-content-sub">差距报告</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主内容区 -->
+          <div class="flex gap-5 items-start">
+            <div class="flex-1 min-w-0">
+              <div class="card p-6" id="resume-lab">
+
+                <!-- ===== 表单态（步骤 1：上传/粘贴） ===== -->
+                <div id="resume-form-view">
+                  <!-- 上传/粘贴快捷区 -->
+                  <div class="mb-5">
+                    <div class="rounded-xl border-2 border-dashed border-content-divider p-5 text-center bg-content-bg/30 hover:border-brand-purple transition cursor-pointer" id="resume-upload-area">
+                      <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-purple mb-2"></i>
+                      <div class="text-[14px] font-semibold text-content-text mb-1">拖拽简历到此处上传，或</div>
+                      <button class="btn-primary px-4 py-1.5 rounded-lg text-sm">点击上传文件</button>
+                      <div class="text-[11px] text-content-sub mt-2">支持 PDF / DOC / TXT · 最大 5MB</div>
+                    </div>
+                    <div class="flex items-center gap-2 my-3">
+                      <div class="flex-1 h-px bg-content-divider"></div>
+                      <span class="text-[11px] text-content-sub">或直接填写下方表单</span>
+                      <div class="flex-1 h-px bg-content-divider"></div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between mb-5">
+                    <div>
+                      <h2 class="font-display font-bold text-lg text-content-text">填写我的简历</h2>
+                      <p class="text-[12px] text-content-sub mt-0.5">分步引导填写，结构化录入便于 AI 精准诊断</p>
+                    </div>
+                    <button class="text-[12px] text-brand-purple font-medium hover:underline" onclick="autoFillResumeDemo()"><i class="fa-regular fa-file-lines mr-1"></i>📄 用示例数据试试</button>
+                  </div>
+
+                  <!-- 步骤进度 -->
+                  <div class="flex items-center mb-6 px-2">
+                    <div class="flex flex-col items-center" style="flex:0 0 auto">
+                      <div class="step-circle done" id="rs-circle-1">1</div>
+                      <div class="text-[11px] mt-1.5 font-medium" id="rs-label-1">基本信息</div>
+                    </div>
+                    <div class="step-line done" id="rs-line-1"></div>
+                    <div class="flex flex-col items-center" style="flex:0 0 auto">
+                      <div class="step-circle current" id="rs-circle-2">2</div>
+                      <div class="text-[11px] mt-1.5 font-medium text-content-sub" id="rs-label-2">教育背景</div>
+                    </div>
+                    <div class="step-line" id="rs-line-2"></div>
+                    <div class="flex flex-col items-center" style="flex:0 0 auto">
+                      <div class="step-circle" id="rs-circle-3">3</div>
+                      <div class="text-[11px] mt-1.5 font-medium text-content-sub" id="rs-label-3">经历项目</div>
+                    </div>
+                    <div class="step-line" id="rs-line-3"></div>
+                    <div class="flex flex-col items-center" style="flex:0 0 auto">
+                      <div class="step-circle" id="rs-circle-4">4</div>
+                      <div class="text-[11px] mt-1.5 font-medium text-content-sub" id="rs-label-4">技能清单</div>
+                    </div>
+                  </div>
+
+                  <!-- 步骤 1：基本信息 -->
+                  <div class="rstep" id="rstep-1">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">姓名 <span class="text-state-danger">*</span></label>
+                        <input class="input" id="r-name" placeholder="如：张三" />
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">求职意向 <span class="text-state-danger">*</span></label>
+                        <select class="input" id="r-intention">
+                          <option value="">请选择目标岗位</option>
+                          <option>前端开发工程师</option>
+                          <option>后端开发工程师</option>
+                          <option>数据分析师</option>
+                          <option>产品经理</option>
+                          <option>UI设计师</option>
+                          <option>运营专员</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">邮箱 <span class="text-state-danger">*</span></label>
+                        <input class="input" id="r-email" placeholder="如：zhangsan@email.com" />
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">电话 <span class="text-state-danger">*</span></label>
+                        <input class="input" id="r-phone" placeholder="如：138-0000-0000" />
+                      </div>
+                      <div class="col-span-2">
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">所在城市 <span class="text-state-danger">*</span></label>
+                        <div class="grid grid-cols-2 gap-3">
+                          <div id="r-province-selector" data-unified-select
+                               data-placeholder="请选择省份"
+                               data-options="provinces"
+                               data-searchable="true"
+                               data-value="">
+                          </div>
+                          <div id="r-city-selector" data-unified-select
+                               data-placeholder="先选省份，再选城市"
+                               data-options=""
+                               data-searchable="true"
+                               data-value="">
+                          </div>
+                        </div>
+                        <input id="r-province" type="hidden" value="" />
+                        <input id="r-city" type="hidden" value="" />
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">个人主页（选填）</label>
+                        <input class="input" id="r-homepage" placeholder="如：github.com/zhangsan" />
+                      </div>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                      <button class="btn-primary px-6 py-2.5 rounded-xl text-sm" onclick="goResumeStep(2)">下一步 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <!-- 步骤 2：教育背景 -->
+                  <div class="rstep hidden" id="rstep-2">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">学校 <span class="text-state-danger">*</span></label>
+                        <input class="input" id="r-school" placeholder="如：某某大学" />
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">专业 <span class="text-state-danger">*</span></label>
+                        <input class="input" id="r-major" placeholder="如：计算机科学与技术" />
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">学历</label>
+                        <select class="input" id="r-degree">
+                          <option>专科</option>
+                          <option selected>本科</option>
+                          <option>硕士</option>
+                          <option>博士</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">就读时间</label>
+                        <input class="input" id="r-edu-time" placeholder="如：2022.09-2026.06" />
+                      </div>
+                      <div class="col-span-2">
+                        <label class="block text-[12px] font-semibold text-content-text mb-1.5">相关课程（用逗号分隔）</label>
+                        <input class="input" id="r-courses" placeholder="如：数据结构, 计算机网络, 操作系统" />
+                      </div>
+                    </div>
+                    <div class="flex justify-between mt-6">
+                      <button class="btn-ghost px-6 py-2.5 rounded-xl text-sm" onclick="goResumeStep(1)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i> 上一步</button>
+                      <button class="btn-primary px-6 py-2.5 rounded-xl text-sm" onclick="goResumeStep(3)">下一步 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <!-- 步骤 3：项目与实习经历 -->
+                  <div class="rstep hidden" id="rstep-3">
+                    <div class="flex items-center justify-between mb-3">
+                      <p class="text-[12px] text-content-sub">添加 1-3 段项目或实习经历，描述建议 80-150 字并包含量化成果</p>
+                      <button class="btn-cyan px-3 py-1.5 rounded-lg text-[12px]" onclick="addResumeExp()"><i class="fa-solid fa-plus mr-1"></i>添加经历</button>
+                    </div>
+                    <div id="r-exp-list" class="space-y-3"></div>
+                    <div class="flex justify-between mt-6">
+                      <button class="btn-ghost px-6 py-2.5 rounded-xl text-sm" onclick="goResumeStep(2)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i> 上一步</button>
+                      <button class="btn-primary px-6 py-2.5 rounded-xl text-sm" onclick="goResumeStep(4)">下一步 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></button>
+                    </div>
+                  </div>
+
+                  <!-- 步骤 4：技能清单 -->
+                  <div class="rstep hidden" id="rstep-4">
+                    <p class="text-[12px] text-content-sub mb-3">输入技能后回车添加，建议 8-15 项与目标岗位相关的技能</p>
+                    <div class="flex gap-2 mb-3">
+                      <input class="input flex-1" id="r-skill-input" placeholder="如：JavaScript，按回车添加" onkeydown="if(event.key==='Enter'){event.preventDefault();addResumeSkill();}" />
+                      <button class="btn-primary px-4 rounded-xl text-sm" onclick="addResumeSkill()">添加</button>
+                    </div>
+                    <div id="r-skill-tags" class="flex flex-wrap gap-2 min-h-[80px] p-3 rounded-xl border border-dashed border-content-divider bg-content-bg/50"></div>
+                    <div class="flex justify-between mt-6">
+                      <button class="btn-ghost px-6 py-2.5 rounded-xl text-sm" onclick="goResumeStep(3)"><i class="fa-solid fa-arrow-left mr-1.5 text-xs"></i> 上一步</button>
+                      <button class="btn-primary px-6 py-2.5 rounded-xl text-sm" onclick="withLoading(this, () => startResumeDiagnosis())"><i class="fa-solid fa-stethoscope mr-1.5"></i>开始 AI 诊断</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== 分析中态 ===== -->
+                <div id="resume-analyzing-view" class="hidden py-16 text-center">
+                  <div class="inline-flex flex-col items-center">
+                    <div class="relative w-24 h-24 mb-5">
+                      <div class="absolute inset-0 rounded-full border-4 border-content-divider"></div>
+                      <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-brand-purple animate-spin"></div>
+                      <i class="fa-solid fa-magnifying-glass-chart absolute inset-0 m-auto text-2xl text-brand-purple" style="width:fit-content;height:fit-content"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-content-text mb-1">AI 正在诊断你的简历</h3>
+                    <p class="text-[13px] text-content-sub mb-4" id="analyze-stage">正在解析简历结构…</p>
+                    <div class="w-64 h-1.5 bg-content-bg rounded-full overflow-hidden">
+                      <div id="analyze-progress" class="h-full bg-gradient-to-r from-brand-purple to-brand-cyan transition-all duration-300" style="width:0%"></div>
+                    </div>
+                    <span class="text-[11px] text-content-sub mt-2 font-mono" id="analyze-pct">0%</span>
+                  </div>
+                </div>
+
+                <!-- ===== 报告态 ===== -->
+                <div id="resume-report-view" class="hidden">
+                  <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                      <i class="fa-solid fa-clipboard-check text-brand-purple text-xl"></i>
+                      <div>
+                        <h2 class="font-display font-bold text-lg text-content-text">ATS 简历诊断报告</h2>
+                        <p class="text-[12px] text-content-sub">基于主流招聘管理系统（ATS）解析规则与目标岗位 JD 比对</p>
+                      </div>
+                    </div>
+                    <button class="btn-ghost px-4 py-2 rounded-lg text-[12px]" onclick="resetResumeDiagnosis()"><i class="fa-solid fa-rotate-left mr-1"></i>重新编辑</button>
+                  </div>
+
+                  <!-- ATS 评分透明度卡片 -->
+                  <div class="grid grid-cols-3 gap-3 mb-5">
+                    <div class="card p-4 flex flex-col items-center text-center" id="ats-card-parse">
+                      <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-check text-emerald-600"></i>
+                      </div>
+                      <div class="text-[11px] text-content-sub font-semibold tracking-wider">可解析性</div>
+                      <div class="text-[15px] font-display font-bold text-emerald-600 mt-0.5" id="ats-parse-label">✓ 通过</div>
+                      <div class="text-[10px] text-content-sub mt-1">ATS 系统可正常读取</div>
+                    </div>
+                    <div class="card p-4 flex flex-col items-center text-center" id="ats-card-keyword">
+                      <div class="w-10 h-10 rounded-full bg-brand-purple/10 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-key text-brand-purple"></i>
+                      </div>
+                      <div class="text-[11px] text-content-sub font-semibold tracking-wider">关键词匹配</div>
+                      <div class="text-[15px] font-display font-bold text-brand-purple mt-0.5" id="ats-keyword-pct">60%</div>
+                      <div class="w-full h-1.5 bg-content-bg rounded-full overflow-hidden mt-1">
+                        <div id="ats-keyword-bar" class="h-full bg-gradient-to-r from-brand-purple to-brand-cyan rounded-full transition-all duration-700" style="width:60%"></div>
+                      </div>
+                    </div>
+                    <div class="card p-4 flex flex-col items-center text-center" id="ats-card-structure">
+                      <div class="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-sitemap text-brand-cyan"></i>
+                      </div>
+                      <div class="text-[11px] text-content-sub font-semibold tracking-wider">结构质量</div>
+                      <div class="mt-0.5"><span class="badge badge-cyan" id="ats-structure-badge">良好</span></div>
+                      <div class="text-[10px] text-content-sub mt-1">模块完整 · 格式规范</div>
+                    </div>
+                  </div>
+
+                  <!-- 总分 + 雷达 -->
+                  <div class="grid grid-cols-[220px_1fr] gap-5 mb-5">
+                    <div class="card p-5 text-center relative overflow-hidden" id="report-score-card">
+                      <div class="hero-orb w-24 h-24 -top-6 -right-6" style="background:#6d5ef6"></div>
+                      <div class="relative">
+                        <div class="text-[11px] text-content-sub tracking-widest font-semibold mb-1">ATS 通过指数</div>
+                        <div class="font-display font-extrabold text-5xl" id="report-total">0</div>
+                        <div class="inline-block mt-2 px-3 py-0.5 rounded-full text-[12px] font-bold" id="report-grade">-</div>
+                        <div class="text-[11px] text-content-sub mt-2 leading-relaxed" id="report-grade-desc">-</div>
+                      </div>
+                    </div>
+                    <div class="card p-4">
+                      <div id="ats-radar" style="width:100%;height:200px"></div>
+                    </div>
+                  </div>
+
+                  <!-- 维度明细 -->
+                  <div class="card p-5 mb-5">
+                    <h3 class="font-display font-bold text-sm text-content-text mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-column text-brand-cyan text-xs"></i> 五维评分明细</h3>
+                    <div class="space-y-3" id="report-dims"></div>
+                  </div>
+
+                  <!-- JD 关键词匹配 -->
+                  <div class="card p-5 mb-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-display font-bold text-sm text-content-text flex items-center gap-2"><i class="fa-solid fa-key text-brand-purple text-xs"></i> JD 关键词匹配</h3>
+                      <span class="text-[12px] text-content-sub" id="kw-summary"></span>
+                    </div>
+                    <div class="mb-2 text-[11px] text-content-sub">已命中关键词</div>
+                    <div class="flex flex-wrap gap-1.5 mb-3" id="kw-matched"></div>
+                    <div class="mb-2 text-[11px] text-content-sub">缺失关键词（建议补充）</div>
+                    <div class="flex flex-wrap gap-1.5" id="kw-missing"></div>
+                  </div>
+
+                  <!-- AI 经历改写器 -->
+                  <div class="card p-5 mb-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-display font-bold text-sm text-content-text flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-brand-purple text-xs"></i> AI 经历改写器</h3>
+                      <span class="text-[11px] text-content-sub">逐条改写为「动作+对象+数字+结果」强句式</span>
+                    </div>
+                    <div class="space-y-3" id="report-rewriter">
+                      <div class="text-[12px] text-content-sub text-center py-4">完成诊断后此处将列出你的每段经历，可一键 AI 改写</div>
+                    </div>
+                  </div>
+
+                  <!-- 优化建议清单 -->
+                  <div class="card p-5">
+                    <h3 class="font-display font-bold text-sm text-content-text mb-4 flex items-center gap-2"><i class="fa-solid fa-lightbulb text-state-warning text-xs"></i> 差距分析与优化建议（共 <span id="issue-count">0</span> 项）</h3>
+                    <div class="space-y-2.5" id="report-issues"></div>
+                    <div style="font-size: 12px; color: #d97706; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #fde68a;">💡 <strong>为何这么改：</strong>目标岗位 JD 高频词包含"性能优化"与"组件封装"，你的原描述未命中这些关键词，容易被 ATS 系统过滤。</div>
+                    <div class="flex items-center gap-3 mt-5 pt-4 border-t border-content-divider">
+                      <button class="btn-primary px-5 py-2.5 rounded-xl text-sm flex-1" onclick="exportResume()"><i class="fa-solid fa-download mr-1.5"></i>导出优化版简历</button>
+                      <button class="btn-ghost px-5 py-2.5 rounded-xl text-sm" onclick="switchPage('tasks')"><i class="fa-solid fa-list-check mr-1.5"></i>去任务中心补齐</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧抽屉：理想样板（可折叠） -->
+          <div id="template-drawer-overlay" class="fixed inset-0 bg-black/30 z-40 hidden" onclick="toggleTemplateDrawer()" style="backdrop-filter:blur(2px)"></div>
+          <div id="template-drawer" class="fixed top-0 right-0 h-full w-[420px] bg-content-bg-elevated shadow-2xl z-50 translate-x-full transition-transform duration-300 overflow-y-auto" style="border-left:1px solid var(--content-divider)">
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-bold text-base text-content-text">理想候选人样板</h3>
+                  <span class="badge badge-purple">AI</span>
+                </div>
+                <button class="w-7 h-7 rounded-lg hover:bg-content-bg flex items-center justify-center text-content-sub" onclick="toggleTemplateDrawer()"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <p class="text-[12px] text-content-sub mb-4"><span id="resume-target-job-sub">前端开发工程师</span> · 大厂 3-5 年对标</p>
+
+              <div class="space-y-4">
+                <div class="card p-5 relative overflow-hidden">
+                  <div class="hero-orb w-24 h-24 -top-6 -right-6" style="background:#7b4fe0"></div>
+                  <div class="relative flex items-center gap-3 mb-4">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&crop=faces" class="w-12 h-12 rounded-xl object-cover" alt="候选人" />
+                    <div class="flex-1 min-w-0">
+                      <div class="text-[12px] font-bold text-content-text">理想候选人画像</div>
+                      <p class="text-[11px] text-content-sub">对标目标岗位的能力模型</p>
+                    </div>
+                  </div>
+
+                  <div class="space-y-3 text-[13px]">
+                    <div>
+                      <div class="flex items-center gap-1.5 mb-1.5 text-content-sub text-[11px] font-semibold tracking-wider"><i class="fa-solid fa-graduation-cap"></i> 教育背景</div>
+                      <div class="font-semibold text-content-text" id="resume-tpl-edu">计算机科学与技术 · 本科</div>
+                      <div class="flex flex-wrap gap-1 mt-1" id="resume-tpl-edu-courses">
+                        <span class="chip" style="font-size:10px;padding:2px 7px">数据结构</span>
+                        <span class="chip" style="font-size:10px;padding:2px 7px">计算机网络</span>
+                        <span class="chip" style="font-size:10px;padding:2px 7px">操作系统</span>
+                      </div>
+                    </div>
+                    <div class="border-t border-content-divider pt-3">
+                      <div class="flex items-center gap-1.5 mb-1.5 text-content-sub text-[11px] font-semibold tracking-wider"><i class="fa-solid fa-code"></i> 核心技能</div>
+                      <div class="space-y-1" id="resume-tpl-skills">
+                        <div class="flex items-center justify-between"><span class="text-content-text">JavaScript/ES6+</span><span class="badge badge-passed">已掌握</span></div>
+                        <div class="flex items-center justify-between"><span><span class="gap-item" onclick="switchPage('tasks')">React 18 + Hooks</span></span><span class="badge badge-verifying">待提升</span></div>
+                        <div class="flex items-center justify-between"><span><span class="gap-item" onclick="switchPage('tasks')">TypeScript</span></span><span class="badge badge-rejected">未掌握</span></div>
+                        <div class="flex items-center justify-between"><span><span class="gap-item" onclick="switchPage('tasks')">Webpack/Vite</span></span><span class="badge badge-rejected">未掌握</span></div>
+                      </div>
+                    </div>
+                    <div class="border-t border-content-divider pt-3">
+                      <div class="flex items-center gap-1.5 mb-1.5 text-content-sub text-[11px] font-semibold tracking-wider"><i class="fa-solid fa-rocket"></i> 项目经历</div>
+                      <div class="border-l-2 border-brand-purple pl-2.5 mb-2">
+                        <div class="font-semibold text-content-text text-[12px]" id="resume-tpl-exp1-title">电商平台前端架构</div>
+                        <p class="text-[11px] text-content-sub leading-relaxed mt-0.5" id="resume-tpl-exp1-desc">主导首页与购物车，LCP 提升 40%，用 <span class="gap-item" onclick="switchPage('tasks')">微前端架构</span> 拆分业务。</p>
+                      </div>
+                      <div class="border-l-2 border-content-divider pl-2.5">
+                        <div class="font-semibold text-content-text text-[12px]" id="resume-tpl-exp2-title">企业级后台管理系统</div>
+                        <p class="text-[11px] text-content-sub leading-relaxed mt-0.5" id="resume-tpl-exp2-desc">封装 <span class="gap-item" onclick="switchPage('tasks')">高级表单组件</span>，复用率 80%。</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card p-4" style="background:linear-gradient(135deg,rgba(109,94,246,0.05),rgba(14,165,183,0.04));border:1px solid rgba(109,94,246,0.18)">
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <i class="fa-solid fa-circle-info text-brand-purple text-sm"></i>
+                    <span class="text-[13px] font-semibold text-content-text">如何使用</span>
+                  </div>
+                  <p class="text-[12px] text-content-sub leading-relaxed">在左侧分步填写你的真实简历内容，AI 将依据 <b class="text-content-text">ATS 招聘系统解析标准</b> 检测可解析性、关键字段、JD 关键词匹配、结构与内容质量，输出可执行的优化建议。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <style>
+            .flow-indicator-item.active-step { }
+            .flow-indicator-item.active-step > div:first-child {
+              background: linear-gradient(135deg, #6d5ef6, #0ea5b7) !important;
+              color: #fff !important;
+              border-color: transparent !important;
+              box-shadow: 0 0 14px rgba(109, 94, 246, 0.45);
+            }
+            .flow-indicator-item.active-step > div:last-child {
+              color: var(--content-text) !important;
+              font-weight: 600 !important;
+            }
+          </style>
+        </section>
