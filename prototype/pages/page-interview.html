@@ -1,0 +1,377 @@
+<!-- ===== PAGE: AI 模拟面试 (INTERVIEW) ===== -->
+        <section id="page-interview" class="page">
+          <div class="mb-6">
+            <div class="eyebrow mb-2">AI · MOCK INTERVIEW</div>
+            <h1 class="font-display font-extrabold text-3xl text-content-text">AI 模拟面试</h1>
+            <p class="text-content-sub mt-2 text-[15px]">基于目标岗位真实面试题库，AI 面试官逐题提问，依据企业通用面试评分量表对结构、技术、逻辑、量化、表达五维度打分并给出改进建议。</p>
+          </div>
+
+          <div class="card p-6" id="interview-lab">
+
+            <!-- ===== 设置态 ===== -->
+            <div id="iv-setup-view">
+              <!-- 目标岗位选择 -->
+              <div class="mb-5">
+                <label class="block text-[12px] font-semibold text-content-text mb-2">目标岗位</label>
+                <select class="input" id="iv-job">
+                  <option>前端开发工程师</option>
+                  <option>后端开发工程师</option>
+                  <option>数据分析师</option>
+                  <option>产品经理</option>
+                  <option>UI设计师</option>
+                  <option>运营专员</option>
+                </select>
+              </div>
+
+              <!-- 面试类型：3 张大卡片 -->
+              <div class="mb-5">
+                <label class="block text-[12px] font-semibold text-content-text mb-3">选择面试类型</label>
+                <div class="grid grid-cols-3 gap-3" id="iv-type-tabs">
+                  <!-- 技术面卡片 -->
+                  <div class="iv-type-tab active cursor-pointer rounded-xl p-4 border-2 transition-all duration-200 hover:shadow-md" data-type="technical" onclick="selectIvType('technical')" style="border-color:transparent;background:#f7f7f9" data-default-border="transparent">
+                    <div class="flex items-center gap-2 mb-2">
+                      <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#6D5EF6,#5B8DEF)">
+                        <i class="fa-solid fa-code text-white text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="font-display font-bold text-sm text-content-text">技术面</div>
+                        <div class="text-[10px] text-content-sub">5 题 · 约 15 分钟</div>
+                      </div>
+                    </div>
+                    <p class="text-[11px] text-content-sub leading-relaxed">适合 <b class="text-content-text">技术研发岗位</b>候选人，考察专业知识、项目深挖、算法与系统设计能力。</p>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium" style="background:rgba(109,94,246,0.1);color:#6D5EF6">技术要点</span>
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium" style="background:rgba(109,94,246,0.1);color:#6D5EF6">算法</span>
+                    </div>
+                  </div>
+
+                  <!-- 行为面卡片 -->
+                  <div class="iv-type-tab cursor-pointer rounded-xl p-4 border-2 transition-all duration-200 hover:shadow-md" data-type="behavioral" onclick="selectIvType('behavioral')" style="border-color:transparent;background:#f7f7f9">
+                    <div class="flex items-center gap-2 mb-2">
+                      <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#0EA5B7,#14B8A6)">
+                        <i class="fa-solid fa-users text-white text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="font-display font-bold text-sm text-content-text">行为面</div>
+                        <div class="text-[10px] text-content-sub">5 题 · 约 12 分钟</div>
+                      </div>
+                    </div>
+                    <p class="text-[11px] text-content-sub leading-relaxed">适合 <b class="text-content-text">综合/管理岗位</b>候选人，考察团队协作、抗压、主动性等软素质。</p>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium" style="background:rgba(14,165,183,0.1);color:#0EA5B7">STAR法则</span>
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium" style="background:rgba(14,165,183,0.1);color:#0EA5B7">软素质</span>
+                    </div>
+                  </div>
+
+                  <!-- HR 面卡片 -->
+                  <div class="iv-type-tab cursor-pointer rounded-xl p-4 border-2 transition-all duration-200 hover:shadow-md" data-type="hr" onclick="selectIvType('hr')" style="border-color:transparent;background:#f7f7f9">
+                    <div class="flex items-center gap-2 mb-2">
+                      <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#F59E0B,#EC4899)">
+                        <i class="fa-solid fa-user-tie text-white text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="font-display font-bold text-sm text-content-text">HR 面</div>
+                        <div class="text-[10px] text-content-sub">5 题 · 约 10 分钟</div>
+                      </div>
+                    </div>
+                    <p class="text-[11px] text-content-sub leading-relaxed">适合 <b class="text-content-text">所有岗位</b>候选人，考察求职动机、职业规划、文化匹配度。</p>
+                    <div class="flex items-center gap-1.5 mt-2.5">
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium" style="background:rgba(245,158,11,0.1);color:#F59E0B">求职动机</span>
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium" style="background:rgba(245,158,11,0.1);color:#F59E0B">文化匹配</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 题型说明 -->
+              <div class="rounded-xl p-4 mb-5" style="background:linear-gradient(135deg,rgba(109,94,246,0.05),rgba(14,165,183,0.04));border:1px solid rgba(109,94,246,0.18)">
+                <div class="flex items-start gap-3">
+                  <i class="fa-solid fa-circle-info text-brand-purple mt-1"></i>
+                  <div class="text-[13px] text-content-text leading-relaxed" id="iv-type-desc">
+                    <b>技术面</b>：考察专业知识、项目深挖、算法与系统设计，5 题。AI 依据技术要点覆盖率与方案合理性评分。
+                  </div>
+                </div>
+              </div>
+
+              <!-- 评分维度 - 星级展示 -->
+              <div class="mb-5">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-brand-cyan text-sm"></i>
+                    <span class="text-[13px] font-semibold text-content-text">评分维度</span>
+                  </div>
+                  <div id="iv-history-score" class="text-[11px] text-content-sub flex items-center gap-1">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>上次练习 <b class="text-brand-purple">72</b> 分</span>
+                  </div>
+                </div>
+                <div id="iv-rubric-preview" class="grid grid-cols-5 gap-2.5">
+                  <!-- 5 维度：星级展示 -->
+                  <div class="rounded-xl p-3 text-center glass-card">
+                    <div class="text-[11px] font-bold text-content-text mb-1">结构清晰度</div>
+                    <div class="flex items-center justify-center gap-0.5 mb-1">
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star-half-stroke text-warning text-sm"></i>
+                    </div>
+                    <div class="text-[10px] text-content-sub">4.5 / 5.0</div>
+                  </div>
+                  <div class="rounded-xl p-3 text-center glass-card">
+                    <div class="text-[11px] font-bold text-content-text mb-1">技术准确度</div>
+                    <div class="flex items-center justify-center gap-0.5 mb-1">
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-regular fa-star text-content-muted text-sm"></i>
+                    </div>
+                    <div class="text-[10px] text-content-sub">4.0 / 5.0</div>
+                  </div>
+                  <div class="rounded-xl p-3 text-center glass-card">
+                    <div class="text-[11px] font-bold text-content-text mb-1">表达逻辑</div>
+                    <div class="flex items-center justify-center gap-0.5 mb-1">
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star-half-stroke text-warning text-sm"></i>
+                      <i class="fa-regular fa-star text-content-muted text-sm"></i>
+                    </div>
+                    <div class="text-[10px] text-content-sub">3.5 / 5.0</div>
+                  </div>
+                  <div class="rounded-xl p-3 text-center glass-card">
+                    <div class="text-[11px] font-bold text-content-text mb-1">量化具体性</div>
+                    <div class="flex items-center justify-center gap-0.5 mb-1">
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                    </div>
+                    <div class="text-[10px] text-content-sub">5.0 / 5.0</div>
+                  </div>
+                  <div class="rounded-xl p-3 text-center glass-card">
+                    <div class="text-[11px] font-bold text-content-text mb-1">长度适宜</div>
+                    <div class="flex items-center justify-center gap-0.5 mb-1">
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star text-warning text-sm"></i>
+                      <i class="fa-solid fa-star-half-stroke text-warning text-sm"></i>
+                    </div>
+                    <div class="text-[10px] text-content-sub">4.5 / 5.0</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 往期得分趋势迷你图 -->
+              <div class="mb-5 p-4 rounded-xl" style="background:linear-gradient(135deg,rgba(109,94,246,0.05),rgba(14,165,183,0.04));border:1px solid rgba(109,94,246,0.15)">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-trend-up text-brand-purple"></i>
+                    <span class="text-[12px] font-semibold text-content-text">往期面试得分趋势</span>
+                  </div>
+                  <span class="text-[11px] text-state-success font-medium">↑ 提升 8 分</span>
+                </div>
+                <div id="iv-history-chart" style="height:60px"></div>
+              </div>
+
+              <div class="flex items-center justify-between pt-4 border-t border-content-divider">
+                <span class="text-[12px] text-content-sub"><i class="fa-regular fa-clock mr-1"></i>约 15-20 分钟 · 共 <b id="iv-q-count">5</b> 题</span>
+                <button class="btn-flow px-6 py-2.5 rounded-xl text-sm" onclick="startInterview()"><i class="fa-solid fa-bullseye mr-1.5"></i>🎯 开始模拟面试</button>
+              </div>
+            </div>
+
+            <!-- ===== 面试态 ===== -->
+            <div id="iv-ask-view" class="hidden">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#6D5EF6,#0EA5B7)">
+                    <i class="fa-solid fa-robot text-white text-sm"></i>
+                  </div>
+                  <div>
+                    <div class="text-[13px] font-semibold text-content-text">AI 面试官</div>
+                    <div class="text-[11px] text-content-sub" id="iv-meta">技术面 · 第 1/5 题</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-40 h-1.5 bg-content-bg rounded-full overflow-hidden">
+                    <div id="iv-progress" class="h-full bg-gradient-to-r from-brand-purple to-brand-cyan transition-all duration-500" style="width:0%"></div>
+                  </div>
+                  <button class="text-[12px] text-state-danger/80 hover:text-state-danger font-medium" onclick="quitInterview()">退出</button>
+                </div>
+              </div>
+
+              <!-- 进度指示器 -->
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[12px] font-bold text-content-text" id="iv-progress-label">第 1 / 5 题</span>
+                  <span class="text-[12px] text-content-sub">·</span>
+                  <span class="text-[12px] text-content-sub" id="iv-eta">预计剩余 12 分钟</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+                  <span class="text-[11px] text-content-sub">正在作答</span>
+                </div>
+              </div>
+
+              <!-- 题目卡 -->
+              <div class="rounded-xl p-5 mb-4" style="background:#f7f7f9;border:1px solid #e8e8ec">
+                <div class="flex items-start gap-3">
+                  <span class="badge badge-purple flex-shrink-0" id="iv-q-tag">技术题</span>
+                  <div class="flex-1">
+                    <div class="text-[11px] text-content-sub mb-1" id="iv-q-hint"></div>
+                    <h3 class="font-display font-bold text-[15px] text-content-text leading-relaxed" id="iv-q-text">题目加载中…</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 作答区 -->
+              <div class="mb-3">
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-[12px] font-semibold text-content-text">你的回答</label>
+                  <span class="text-[11px] text-content-sub">建议 200-500 字，结构化作答</span>
+                </div>
+                <textarea class="input" id="iv-answer" rows="8" placeholder="在此输入你的回答…&#10;提示：技术面可用「结论+原理+示例」结构；行为面可用 STAR 法则（情境-任务-行动-结果）"></textarea>
+                <div class="flex items-center justify-between mt-1.5">
+                  <span class="text-[11px] text-content-sub" id="iv-char-count">0 字</span>
+                  <span class="text-[11px] text-content-sub" id="iv-tip"></span>
+                </div>
+              </div>
+
+              <div class="flex justify-between">
+                <button class="btn-ghost px-5 py-2.5 rounded-xl text-sm" onclick="skipQuestion()"><i class="fa-solid fa-forward mr-1.5 text-xs"></i>跳过本题</button>
+                <button class="btn-primary px-6 py-2.5 rounded-xl text-sm" onclick="submitAnswer()">提交并下一题 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i></button>
+              </div>
+            </div>
+
+            <!-- ===== 报告态 ===== -->
+            <div id="iv-report-view" class="hidden">
+              <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                  <i class="fa-solid fa-clipboard-check text-brand-purple text-xl"></i>
+                  <div>
+                    <h2 class="font-display font-bold text-lg text-content-text">面试评估报告</h2>
+                    <p class="text-[12px] text-content-sub" id="iv-report-meta">-</p>
+                  </div>
+                </div>
+                <button class="btn-ghost px-4 py-2 rounded-lg text-[12px]" onclick="resetInterview()"><i class="fa-solid fa-rotate-left mr-1"></i>再来一次</button>
+              </div>
+
+              <!-- 总分 + 雷达 -->
+              <div class="grid grid-cols-[220px_1fr] gap-5 mb-5">
+                <div class="card p-5 text-center relative overflow-hidden">
+                  <div class="hero-orb w-24 h-24 -top-6 -right-6" style="background:#0ea5b7"></div>
+                  <div class="relative">
+                    <div class="text-[11px] text-content-sub tracking-widest font-semibold mb-1">综合面试得分</div>
+                    <div class="font-display font-extrabold text-5xl" id="iv-total">0</div>
+                    <div class="inline-block mt-2 px-3 py-0.5 rounded-full text-[12px] font-bold" id="iv-grade">-</div>
+                    <div class="text-[11px] text-content-sub mt-2 leading-relaxed" id="iv-grade-desc">-</div>
+                  </div>
+                </div>
+                <div class="card p-4">
+                  <div id="iv-radar" style="width:100%;height:200px"></div>
+                </div>
+              </div>
+
+              <!-- 维度明细 -->
+              <div class="card p-5 mb-5">
+                <h3 class="font-display font-bold text-sm text-content-text mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-column text-brand-cyan text-xs"></i> 五维评分明细</h3>
+                <div class="space-y-3" id="iv-dims"></div>
+              </div>
+
+              <!-- 逐题反馈 -->
+              <div class="card p-5 mb-5">
+                <h3 class="font-display font-bold text-sm text-content-text mb-4 flex items-center gap-2"><i class="fa-solid fa-list-ol text-brand-purple text-xs"></i> 逐题反馈</h3>
+                <div class="space-y-3" id="iv-q-feedback"></div>
+              </div>
+
+              <!-- 改进建议 -->
+              <div class="card p-5">
+                <h3 class="font-display font-bold text-sm text-content-text mb-4 flex items-center gap-2"><i class="fa-solid fa-lightbulb text-state-warning text-xs"></i> 综合改进建议</h3>
+                <div class="space-y-2.5" id="iv-suggestions"></div>
+                <div class="flex items-center gap-3 mt-5 pt-4 border-t border-content-divider">
+                  <button class="btn-primary px-5 py-2.5 rounded-xl text-sm flex-1" onclick="switchPage('resume')"><i class="fa-solid fa-file-lines mr-1.5"></i>去优化简历</button>
+                  <button class="btn-ghost px-5 py-2.5 rounded-xl text-sm" onclick="switchPage('tasks')"><i class="fa-solid fa-list-check mr-1.5"></i>补齐技能任务</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== 面试历史 ===== -->
+            <div id="iv-history-section" class="mt-6 pt-5 border-t border-content-divider">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-display font-bold text-sm text-content-text flex items-center gap-2">
+                  <i class="fa-solid fa-clock-rotate-left text-brand-purple text-xs"></i> 面试历史
+                </h3>
+                <span class="text-[11px] text-content-sub" id="iv-history-count">共 3 次记录</span>
+              </div>
+              <div id="iv-history-list" class="space-y-2.5">
+                <!-- 历史记录项 -->
+                <div class="rounded-xl p-4 flex items-center gap-4" style="background:#f7f7f9;border:1px solid #e8e8ec">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#6D5EF6,#0EA5B7)">
+                    <i class="fa-solid fa-user-graduate text-white text-sm"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="font-display font-bold text-[13px] text-content-text">前端开发工程师</span>
+                      <span class="badge badge-purple text-[10px]">技术面</span>
+                    </div>
+                    <div class="text-[11px] text-content-sub">2026-07-28 14:30 · 共 5 题</div>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <div class="font-display font-extrabold text-xl text-brand-cyan">78</div>
+                    <div class="text-[10px] text-content-sub">良好 · B</div>
+                  </div>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    <button class="btn-ghost px-3 py-1.5 rounded-lg text-[11px]" onclick="resetInterview()"><i class="fa-solid fa-eye mr-1"></i>查看</button>
+                    <button class="btn-ghost px-3 py-1.5 rounded-lg text-[11px]" style="color:#6D5EF6" onclick="startInterview()"><i class="fa-solid fa-rotate-right mr-1"></i>重练</button>
+                  </div>
+                </div>
+
+                <div class="rounded-xl p-4 flex items-center gap-4" style="background:#f7f7f9;border:1px solid #e8e8ec">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#0EA5B7,#14B8A6)">
+                    <i class="fa-solid fa-user-graduate text-white text-sm"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="font-display font-bold text-[13px] text-content-text">前端开发工程师</span>
+                      <span class="badge badge-cyan text-[10px]">行为面</span>
+                    </div>
+                    <div class="text-[11px] text-content-sub">2026-07-25 10:15 · 共 5 题</div>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <div class="font-display font-extrabold text-xl text-state-success">85</div>
+                    <div class="text-[10px] text-content-sub">优秀 · A</div>
+                  </div>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    <button class="btn-ghost px-3 py-1.5 rounded-lg text-[11px]" onclick="resetInterview()"><i class="fa-solid fa-eye mr-1"></i>查看</button>
+                    <button class="btn-ghost px-3 py-1.5 rounded-lg text-[11px]" style="color:#6D5EF6" onclick="startInterview()"><i class="fa-solid fa-rotate-right mr-1"></i>重练</button>
+                  </div>
+                </div>
+
+                <div class="rounded-xl p-4 flex items-center gap-4" style="background:#f7f7f9;border:1px solid #e8e8ec">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#F59E0B,#EC4899)">
+                    <i class="fa-solid fa-user-graduate text-white text-sm"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="font-display font-bold text-[13px] text-content-text">后端开发工程师</span>
+                      <span class="badge" style="background:rgba(245,158,11,0.1);color:#F59E0B;text-[10px]">HR 面</span>
+                    </div>
+                    <div class="text-[11px] text-content-sub">2026-07-20 19:00 · 共 5 题</div>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <div class="font-display font-extrabold text-xl text-state-warning">62</div>
+                    <div class="text-[10px] text-content-sub">一般 · C</div>
+                  </div>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    <button class="btn-ghost px-3 py-1.5 rounded-lg text-[11px]" onclick="resetInterview()"><i class="fa-solid fa-eye mr-1"></i>查看</button>
+                    <button class="btn-ghost px-3 py-1.5 rounded-lg text-[11px]" style="color:#6D5EF6" onclick="startInterview()"><i class="fa-solid fa-rotate-right mr-1"></i>重练</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
