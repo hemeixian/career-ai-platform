@@ -1,0 +1,789 @@
+<section id="page-diagnosis" class="page">
+<style>
+  /* Diagnosis-specific enhancements */
+  .skill-card {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  .skill-card:hover {
+    border-color: #6d5ef6 !important;
+    box-shadow: 0 4px 16px rgba(109, 94, 246, 0.12);
+    transform: translateY(-1px);
+  }
+  .skill-card.active {
+    border-color: #6d5ef6 !important;
+    background: linear-gradient(135deg, rgba(109, 94, 246, 0.04), rgba(14, 165, 183, 0.03));
+    box-shadow: 0 0 0 2px rgba(109, 94, 246, 0.2), 0 4px 16px rgba(109, 94, 246, 0.12);
+  }
+  .skill-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .skill-progress-bar {
+    flex: 1;
+    height: 10px;
+    background: linear-gradient(90deg, #f1f5f9, #e8ecf2);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .skill-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  .skill-progress-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    animation: progressShimmer 2s infinite;
+  }
+  @keyframes progressShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .skill-progress-target {
+    position: absolute;
+    top: -2px;
+    height: 14px;
+    width: 2px;
+    background: #f59e0b;
+    border-radius: 1px;
+    box-shadow: 0 0 4px rgba(245, 158, 11, 0.5);
+  }
+  .skill-progress-target::after {
+    content: attr(data-target);
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 600;
+    color: #f59e0b;
+    white-space: nowrap;
+  }
+  .skill-gap-text {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--content-sub);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .skill-gap-text .gap-num {
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .skill-interval {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .interval-intro { background: #fef3c7; color: #92400e; }
+  .interval-proficient { background: #dbeafe; color: #1e40af; }
+  .interval-expert { background: #d1fae5; color: #065f46; }
+  .interval-novice { background: #fee2e2; color: #991b1b; }
+  .priority-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    margin-left: 6px;
+  }
+  .sort-toggle {
+    display: inline-flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .sort-option {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--content-sub);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .sort-option:hover { color: var(--content-text); }
+  .sort-option.active {
+    background: #fff;
+    color: #6d5ef6;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  /* Skill detail popup */
+  .skill-detail-popup {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #fff;
+    border: 1px solid var(--content-divider);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
+    padding: 16px;
+    min-width: 260px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .skill-detail-popup.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(4px);
+    pointer-events: auto;
+  }
+  .skill-detail-popup::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-left: 1px solid var(--content-divider);
+    border-top: 1px solid var(--content-divider);
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--content-divider-soft);
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { font-size: 12px; color: var(--content-sub); }
+  .detail-value { font-size: 13px; font-weight: 600; color: var(--content-text); }
+
+  /* Skill tree specific */
+  .skill-tree-stage {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+  }
+  .skill-tree-week {
+    flex-shrink: 0;
+    width: 72px;
+    text-align: center;
+  }
+  .skill-tree-week-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6d5ef6;
+    background: rgba(109, 94, 246, 0.1);
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .skill-tree-improve {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0ea5b7;
+    background: rgba(14, 165, 183, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .skill-tree-resources {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .skill-tree-resource {
+    font-size: 11px;
+    padding: 3px 10px;
+    background: #f1f5f9;
+    border-radius: 999px;
+    color: var(--content-sub);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .skill-tree-resource:hover {
+    background: rgba(109, 94, 246, 0.1);
+    color: #6d5ef6;
+  }
+
+  /* Radar point pulse on hover/click */
+  .radar-point-pulse {
+    animation: radarPulse 1s ease-out;
+  }
+  @keyframes radarPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(2.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Gap size badge */
+  .gap-size-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .gap-critical { background: #fee2e2; color: #b91c1c; }
+  .gap-large { background: #fed7aa; color: #c2410c; }
+  .gap-medium { background: #fef3c7; color: #a16207; }
+  .gap-small { background: #dcfce7; color: #15803d; }
+</style>
+
+<div class="flex items-start justify-between mb-6 gap-4">
+  <div>
+    <div class="eyebrow mb-2">SKILL · DIAGNOSIS</div>
+    <h1 class="font-display font-extrabold text-3xl text-content-text">技能差距诊断</h1>
+    <p class="text-content-sub mt-2 text-[15px]">对比理想简历与你的现状，识别语义级能力差距，生成可执行学习路径。</p>
+  </div>
+  <div class="flex items-center">
+    <button class="btn-primary px-4 py-2.5 rounded-lg text-sm" onclick="rediagnose()"><i class="fa-solid fa-rotate mr-1.5 text-xs"></i>重新诊断</button>
+    <button style="margin-left: 12px; padding: 8px 16px; background: #ffffff; border: 1px solid #e2e8f0; color: #475569; border-radius: 6px; cursor: pointer;">🤖 AI 模拟面试评估 (补充诊断)</button>
+  </div>
+</div>
+
+<!-- Summary cards -->
+<div class="grid grid-cols-3 gap-5 mb-6">
+  <div class="card p-5">
+    <div class="text-xs text-content-sub font-medium mb-2">综合匹配度</div>
+    <div class="flex items-end gap-2">
+      <div class="font-display font-extrabold text-3xl text-brand-purple">73%</div>
+      <div class="text-[11px] text-state-success font-semibold mb-1">+5%</div>
+    </div>
+    <div class="match-bar mt-3"><div class="match-fill" style="width:73%"></div></div>
+  </div>
+  <div class="card p-5">
+    <div class="text-xs text-content-sub font-medium mb-2">已掌握技能</div>
+    <div class="font-display font-extrabold text-3xl text-state-success">8 <span class="text-base text-content-sub">/ 14</span></div>
+    <div class="text-[11px] text-content-sub mt-3">占比 57.1%</div>
+  </div>
+  <div class="card p-5">
+    <div class="text-xs text-content-sub font-medium mb-2">待补齐差距</div>
+    <div class="font-display font-extrabold text-3xl text-state-warning">6 <span class="text-base text-content-sub">项</span></div>
+    <div class="text-[11px] text-content-sub mt-3">含 2 项核心差距</div>
+  </div>
+</div>
+
+<!-- View tabs -->
+<div class="card p-6">
+  <div class="flex items-center gap-2 mb-6 border-b border-content-divider pb-3">
+    <button class="view-tab active" onclick="switchDiagnosisView('list', this)"><i class="fa-solid fa-list-ul mr-1.5 text-xs"></i>技能清单</button>
+    <button class="view-tab" onclick="switchDiagnosisView('radar', this)"><i class="fa-solid fa-chart-pie mr-1.5 text-xs"></i>雷达图</button>
+    <button class="view-tab" onclick="switchDiagnosisView('timeline', this)"><i class="fa-solid fa-timeline mr-1.5 text-xs"></i>时间轴</button>
+  </div>
+
+  <!-- View 1: skill list -->
+  <div id="diag-view-list" class="diag-view">
+    <!-- Sort toggle -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="sort-toggle" id="skill-sort-toggle">
+        <div class="sort-option active" data-sort="gap" onclick="sortSkills('gap', this)">按差距大小</div>
+        <div class="sort-option" data-sort="alpha" onclick="sortSkills('alpha', this)">按字母</div>
+        <div class="sort-option" data-sort="priority" onclick="sortSkills('priority', this)">按优先级</div>
+      </div>
+      <div class="text-[11px] text-content-sub flex items-center gap-1">
+        <i class="fa-solid fa-info-circle"></i> 点击卡片 → 雷达联动
+      </div>
+    </div>
+
+    <div class="space-y-2" id="skill-gaps-list">
+      <!-- Skill cards will be rendered here by JS -->
+    </div>
+  </div>
+
+  <!-- View 2: radar -->
+  <div id="diag-view-radar" class="diag-view hidden">
+    <div class="flex items-center justify-between mb-4 text-xs">
+      <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:rgba(123,79,224,0.6);border:1px solid #7b4fe0"></span>当前能力</span>
+      <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:rgba(0,184,212,0.25);border:1px dashed #00b8d4"></span>岗位要求</span>
+      <span class="text-content-sub">点击左侧技能卡片可联动高亮雷达点</span>
+    </div>
+    <div id="chart-diagnosis-radar" style="height: 420px;"></div>
+  </div>
+
+  <!-- View 3: timeline / skill tree -->
+  <div id="diag-view-timeline" class="diag-view hidden">
+    <!-- Skill tree (new) -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-display font-bold text-base text-content-text flex items-center gap-2">
+          <i class="fa-solid fa-code-branch text-brand-purple"></i> 技能成长路径
+        </h3>
+        <span class="text-[11px] text-content-sub">点击阶段查看学习资源</span>
+      </div>
+      <div class="skill-tree" id="skill-tree-container">
+        <!-- Skill tree nodes rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Original timeline (keep) -->
+    <div class="timeline-track">
+      <div class="timeline-line"></div>
+      <div class="flex gap-3" id="learning-path-list" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="timeline-node">
+          <div class="timeline-dot done"><i class="fa-solid fa-check"></i></div>
+          <div class="mt-3 px-2">
+            <div class="text-[12px] font-semibold text-content-text">JavaScript 进阶</div>
+            <div class="text-[10px] text-content-sub mt-0.5">已完成 · 6h</div>
+            <span class="badge badge-passed mt-1.5">已通过</span>
+          </div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot done"><i class="fa-solid fa-check"></i></div>
+          <div class="mt-3 px-2">
+            <div class="text-[12px] font-semibold text-content-text">React 基础</div>
+            <div class="text-[10px] text-content-sub mt-0.5">已完成 · 8h</div>
+            <span class="badge badge-passed mt-1.5">已通过</span>
+          </div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot"><i class="fa-solid fa-play text-[10px]"></i></div>
+          <div class="mt-3 px-2">
+            <div class="text-[12px] font-semibold text-content-text">React Hooks 实战</div>
+            <div class="text-[10px] text-content-sub mt-0.5">进行中 · 4h</div>
+            <span class="badge badge-progress mt-1.5">优先级高</span>
+          </div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot locked"><i class="fa-solid fa-lock text-[10px]"></i></div>
+          <div class="mt-3 px-2">
+            <div class="text-[12px] font-semibold text-content-sub">TypeScript 系统</div>
+            <div class="text-[10px] text-content-sub mt-0.5">待解锁 · 12h</div>
+            <span class="badge badge-pending mt-1.5">未解锁</span>
+          </div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-dot locked"><i class="fa-solid fa-lock text-[10px]"></i></div>
+          <div class="mt-3 px-2">
+            <div class="text-[12px] font-semibold text-content-sub">Vite 工程化</div>
+            <div class="text-[10px] text-content-sub mt-0.5">待解锁 · 6h</div>
+            <span class="badge badge-pending mt-1.5">未解锁</span>
+          </div>
+        </div>
+        <div id="degrade-warning" style="display: none; margin-top: 16px; padding: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626; font-size: 14px;">⚠️ 检测到你在「React Hooks 实战」多次未通过，系统已自动为你解锁前置基础任务：<a href="#" style="font-weight: 600; text-decoration: underline;">React 生命周期与闭包复习</a>，建议先完成此基础任务再尝试。</div>
+      </div>
+    </div>
+    <div class="mt-8 rounded-xl p-4 flex items-start gap-3" style="background:rgba(0,184,212,0.06);border:1px solid rgba(0,184,212,0.2)">
+      <i class="fa-solid fa-route text-brand-cyan mt-0.5"></i>
+      <div class="text-[13px] text-content-text flex items-center flex-wrap">
+        <span class="font-semibold">学习路径建议：</span>按队列顺序逐项完成，每通过一项验证，雷达图对应维度将渐进抬升。完成全部 5 项后建议重新诊断以更新差距清单。
+        <button onclick="let c = document.getElementById('learning-path-list'); c.style.flexDirection = c.style.flexDirection === 'row' ? 'column' : 'row'; c.style.alignItems = 'center';" style="margin-left: 16px; font-size: 12px; color: #3b82f6; background: #eff6ff; padding: 4px 12px; border-radius: 9999px; border: none; cursor: pointer;">切换为技能树视图</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Inline script for diagnosis page interactions -->
+<script>
+  // ============ SKILL DATA (with radar dimension mapping) ============
+  const SKILL_DATA = [
+    {
+      id: 'js', name: 'JavaScript / ES6+',
+      mastery: 88, target: 95,
+      radarDim: 0, radars: [0, 4],
+      status: 'mastered',
+      resources: ['现代 JavaScript 教程', 'ES6 特性速查', '闭包与原型深度解析']
+    },
+    {
+      id: 'react', name: 'React 框架与 Hooks',
+      mastery: 62, target: 85,
+      radarDim: 0, radars: [0, 1],
+      status: 'improve',
+      resources: ['React 官方文档', 'Hooks 实战精讲', '性能优化指南']
+    },
+    {
+      id: 'ts', name: 'TypeScript 类型系统',
+      mastery: 15, target: 80,
+      radarDim: 4, radars: [0, 4],
+      status: 'missing',
+      resources: ['TypeScript 官方手册', '类型体操入门', '泛型实战']
+    },
+    {
+      id: 'webpack', name: 'Webpack / Vite 构建工具',
+      mastery: 8, target: 70,
+      radarDim: 4, radars: [4],
+      status: 'missing',
+      resources: ['Vite 实战指南', 'Webpack 配置大全', '工程化最佳实践']
+    },
+    {
+      id: 'html', name: 'HTML5 / CSS3',
+      mastery: 92, target: 95,
+      radarDim: 0, radars: [0],
+      status: 'mastered',
+      resources: ['CSS Grid 完全指南', 'Flexbox 实战']
+    },
+    {
+      id: 'engineering', name: '项目工程化与协作',
+      mastery: 55, target: 80,
+      radarDim: 1, radars: [1, 3],
+      status: 'improve',
+      resources: ['Git 工作流', 'CI/CD 入门', 'Code Review 指南']
+    }
+  ];
+
+  // Radar dimension names (matching initDiagnosisRadar)
+  const RADAR_DIMS = ['技术能力', '项目经验', '软技能', '行业知识', '工具熟练度'];
+
+  // Skill tree stages
+  const SKILL_TREE = [
+    {
+      week: '第 1-2 周',
+      title: 'React 核心进阶',
+      mastery: 55, target: 85,
+      improve: 15,
+      status: 'completed',
+      resources: ['Hooks 深入实战', 'Context & Reducer', '性能优化基础']
+    },
+    {
+      week: '第 3-4 周',
+      title: 'TypeScript 系统化学习',
+      mastery: 15, target: 80,
+      improve: 25,
+      status: 'current',
+      resources: ['类型体操入门', '泛型实战', '装饰器与高级类型']
+    },
+    {
+      week: '第 5-6 周',
+      title: '构建工具与工程化',
+      mastery: 8, target: 70,
+      improve: 20,
+      status: 'locked',
+      resources: ['Vite 配置实战', 'Webpack 进阶', 'Monorepo 管理']
+    },
+    {
+      week: '第 7-8 周',
+      title: '项目实战与协作',
+      mastery: 55, target: 80,
+      improve: 15,
+      status: 'locked',
+      resources: ['CI/CD 流水线搭建', '团队协作规范', 'Code Review 实践']
+    },
+    {
+      week: '第 9-10 周',
+      title: '综合复习与面试准备',
+      mastery: 70, target: 90,
+      improve: 10,
+      status: 'locked',
+      resources: ['模拟面试题', '算法与数据结构', '系统设计入门']
+    }
+  ];
+
+  // ============ MASTERY INTERVAL ============
+  function getMasteryInterval(pct) {
+    if (pct >= 80) return { label: '精通', cls: 'interval-expert' };
+    if (pct >= 60) return { label: '熟练', cls: 'interval-proficient' };
+    if (pct >= 30) return { label: '入门', cls: 'interval-intro' };
+    return { label: '初学', cls: 'interval-novice' };
+  }
+
+  // ============ GAP SIZE CLASSES ============
+  function getGapClass(gap) {
+    if (gap >= 40) return 'gap-critical';
+    if (gap >= 25) return 'gap-large';
+    if (gap >= 15) return 'gap-medium';
+    return 'gap-small';
+  }
+
+  // ============ PRIORITY COMPUTATION ============
+  function getPriority(skill) {
+    const gap = skill.target - skill.mastery;
+    if (gap >= 40) return { level: 3, label: '🔥 核心差距', cls: 'priority-high' };
+    if (gap >= 25) return { level: 2, label: '⚡ 重点提升', cls: 'priority-mid' };
+    return { level: 1, label: '逐步提升', cls: 'priority-low' };
+  }
+
+  // ============ RENDER SKILL LIST ============
+  function renderSkillList(sortBy) {
+    const container = document.getElementById('skill-gaps-list');
+    if (!container) return;
+
+    let skills = [...SKILL_DATA];
+    if (sortBy === 'gap') {
+      skills.sort((a, b) => (b.target - b.mastery) - (a.target - a.mastery));
+    } else if (sortBy === 'alpha') {
+      skills.sort((a, b) => a.name.localeCompare(b.name, 'zh'));
+    } else if (sortBy === 'priority') {
+      skills.sort((a, b) => getPriority(b).level - getPriority(a).level);
+    }
+
+    container.innerHTML = skills.map(skill => {
+      const gap = skill.target - skill.mastery;
+      const interval = getMasteryInterval(skill.mastery);
+      const priority = getPriority(skill);
+      const gapClass = getGapClass(gap);
+      const isCritical = gap >= 40;
+
+      // Progress bar color
+      let barColor = '#94a3b8';
+      if (skill.status === 'mastered') barColor = 'linear-gradient(90deg, #10b981, #34d399)';
+      else if (skill.status === 'improve') barColor = 'linear-gradient(90deg, #0ea5b7, #38bdf8)';
+      else barColor = 'linear-gradient(90deg, #f43f5e, #fb7185)';
+
+      // Dot class
+      const dotCls = skill.status === 'mastered' ? 'dot-mastered' : skill.status === 'improve' ? 'dot-improve' : 'dot-missing';
+
+      // Badge
+      const badgeInfo = skill.status === 'mastered'
+        ? { text: '已掌握', cls: 'badge-passed' }
+        : skill.status === 'improve'
+        ? { text: '待提升', cls: 'badge-verifying' }
+        : { text: '未掌握', cls: 'badge-rejected' };
+
+      return `
+        <div class="skill-card rounded-xl border border-content-divider p-4"
+             data-skill-id="${skill.id}"
+             data-radar-dim="${skill.radarDim}"
+             data-mastery="${skill.mastery}"
+             data-target="${skill.target}"
+             data-gap="${gap}"
+             onclick="onSkillCardClick(this, ${skill.radarDim})">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="dot ${dotCls}"></span>
+              <span class="font-semibold text-content-text">${skill.name}</span>
+              <span class="badge ${badgeInfo.cls}">${badgeInfo.text}</span>
+              <span class="skill-interval ${interval.cls}">${interval.label}</span>
+              ${isCritical ? '<span class="priority-tag">🔥 核心差距</span>' : ''}
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="gap-size-badge ${gapClass}">-${gap}%</span>
+            </div>
+          </div>
+          <div class="skill-progress-wrap">
+            <div class="skill-progress-bar">
+              <div class="skill-progress-fill" style="width:${skill.mastery}%; background:${barColor};"></div>
+              <div class="skill-progress-target" style="left:${skill.target}%;" data-target="目标${skill.target}%" title="目标 ${skill.target}%"></div>
+            </div>
+            <div class="skill-gap-text">
+              <span class="gap-num" style="color:${skill.status === 'mastered' ? '#10b981' : '#f43f5e'};">${skill.mastery}%</span>
+              <span>→</span>
+              <span>目标${skill.target}%</span>
+              <span style="color:#f43f5e;font-weight:600;">还差${gap}%</span>
+            </div>
+          </div>
+          <p class="text-[12px] text-content-sub mt-2">
+            ${skill.status === 'mastered'
+              ? '基础扎实，建议在实战项目中巩固和拓展深度。'
+              : skill.status === 'improve'
+              ? `理解核心概念但高级用法需加强。推荐：<a href="#" class="text-brand-cyan hover:underline" onclick="event.stopPropagation()">${skill.resources[0]}</a>`
+              : `建议优先学习。推荐：<a href="#" class="text-brand-cyan hover:underline" onclick="event.stopPropagation()">${skill.resources[0]}</a> · 预计 ${Math.ceil(gap / 5)}h`}
+          </p>
+          <!-- Detail popup (hidden by default) -->
+          <div class="skill-detail-popup" id="popup-${skill.id}">
+            <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--content-text);">${skill.name} 详情</div>
+            <div class="detail-row">
+              <span class="detail-label">当前掌握度</span>
+              <span class="detail-value">${skill.mastery}%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">掌握区间</span>
+              <span class="detail-value"><span class="skill-interval ${interval.cls}">${interval.label}</span></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">目标水平</span>
+              <span class="detail-value">${skill.target}%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">差距</span>
+              <span class="detail-value" style="color:#f43f5e;">${gap}%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">对应雷达维度</span>
+              <span class="detail-value">${RADAR_DIMS[skill.radarDim]}</span>
+            </div>
+            <div class="detail-row" style="border-bottom:none;">
+              <span class="detail-label">优先级</span>
+              <span class="detail-value" style="color:${priority.level >= 3 ? '#b91c1c' : priority.level === 2 ? '#c2410c' : '#a16207'};">${priority.label}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ============ SKILL CARD CLICK → RADAR LINKAGE ============
+  let activeSkillCard = null;
+  let activePopup = null;
+
+  function onSkillCardClick(card, radarDim) {
+    const skillId = card.dataset.skillId;
+    const popup = document.getElementById('popup-' + skillId);
+
+    // Toggle popup
+    if (activePopup && activePopup !== popup) {
+      activePopup.classList.remove('show');
+      if (activeSkillCard) activeSkillCard.classList.remove('active');
+    }
+
+    if (popup.classList.contains('show')) {
+      popup.classList.remove('show');
+      card.classList.remove('active');
+      activePopup = null;
+      activeSkillCard = null;
+    } else {
+      popup.classList.add('show');
+      card.classList.add('active');
+      activePopup = popup;
+      activeSkillCard = card;
+
+      // Switch to radar view and highlight
+      switchDiagnosisView('radar', document.querySelector('.view-tab:nth-child(2)'));
+      highlightRadarDim(radarDim);
+    }
+  }
+
+  // Close popup on outside click
+  document.addEventListener('click', function(e) {
+    if (activePopup && !activePopup.contains(e.target) && !e.target.closest('.skill-card')) {
+      activePopup.classList.remove('show');
+      if (activeSkillCard) activeSkillCard.classList.remove('active');
+      activePopup = null;
+      activeSkillCard = null;
+    }
+  });
+
+  // ============ RADAR DIM HIGHLIGHT ============
+  function highlightRadarDim(dimIndex) {
+    if (!charts.diagnosisRadar) return;
+    const chart = charts.diagnosisRadar;
+
+    chart.setOption({
+      radar: {
+        indicator: RADAR_DIMS.map((name, i) => ({
+          name: name,
+          max: 100,
+          color: i === dimIndex ? '#f43f5e' : '#6B6B76'
+        }))
+      }
+    });
+
+    chart.setOption({ radar: { radius: '78%' } });
+    setTimeout(() => {
+      chart.setOption({ radar: { radius: '70%' } });
+    }, 400);
+  }
+
+  // ============ SORT TOGGLE ============
+  function sortSkills(sortBy, btn) {
+    document.querySelectorAll('#skill-sort-toggle .sort-option').forEach(o => o.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderSkillList(sortBy);
+  }
+
+  // ============ RENDER SKILL TREE ============
+  function renderSkillTree() {
+    const container = document.getElementById('skill-tree-container');
+    if (!container) return;
+
+    container.innerHTML = SKILL_TREE.map((stage, idx) => {
+      let nodeClass = 'tree-node';
+      if (stage.status === 'completed') nodeClass += ' completed';
+      else if (stage.status === 'current') nodeClass += ' current';
+      else if (stage.status === 'locked') nodeClass += ' locked';
+
+      const statusBadge = stage.status === 'completed'
+        ? '<span class="badge badge-passed">已完成</span>'
+        : stage.status === 'current'
+        ? '<span class="badge badge-progress">进行中</span>'
+        : '<span class="badge badge-pending">待解锁</span>';
+
+      const barColor = stage.status === 'completed'
+        ? 'linear-gradient(90deg, #10b981, #34d399)'
+        : stage.status === 'current'
+        ? 'linear-gradient(90deg, #0ea5b7, #38bdf8)'
+        : 'linear-gradient(90deg, #94a3b8, #cbd5e1)';
+
+      return `
+        <div class="${nodeClass}" data-stage-index="${idx}" onclick="toggleStageResources(this, ${idx})">
+          <div class="skill-tree-stage">
+            <div class="skill-tree-week">
+              <span class="skill-tree-week-label">${stage.week}</span>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div class="tree-node-title">${stage.title}</div>
+                <div class="skill-tree-improve">Match +${stage.improve}%</div>
+              </div>
+              <div class="skill-progress-wrap" style="margin-top:8px;">
+                <div class="skill-progress-bar" style="height:8px;">
+                  <div class="skill-progress-fill" style="width:${stage.mastery}%;background:${barColor};"></div>
+                  <div class="skill-progress-target" style="left:${stage.target}%;" data-target="${stage.target}%" title="目标 ${stage.target}%"></div>
+                </div>
+                <div class="skill-gap-text">
+                  <span class="gap-num">${stage.mastery}%</span>
+                  <span>→</span>
+                  <span>目标${stage.target}%</span>
+                </div>
+              </div>
+              <div class="skill-tree-resources">
+                ${stage.resources.map((r, i) => `
+                  <span class="skill-tree-resource" onclick="event.stopPropagation();showToast('即将打开：${r}', 'robot')">
+                    <i class="fa-solid fa-book-open mr-1" style="font-size:10px;"></i>${r}
+                  </span>
+                `).join('')}
+              </div>
+              <div class="tree-node-meta">
+                ${statusBadge}
+                <span>预计 ${Math.ceil((stage.target - stage.mastery) / 10)} 周</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function toggleStageResources(node, idx) {
+    const resources = node.querySelectorAll('.skill-tree-resource');
+    if (resources.length === 0) return;
+    // Resources are always visible in our design; this is for potential expansion
+    node.style.transform = node.style.transform === 'translateX(2px)' ? 'translateX(4px)' : 'translateX(2px)';
+  }
+
+  // ============ INIT ============
+  // Initial render
+  document.addEventListener('DOMContentLoaded', function() {
+    renderSkillList('gap');
+    renderSkillTree();
+  });
+
+  // Also init immediately if DOM already loaded (SPA fragment pattern)
+  (function initDiagnosisPage() {
+    if (document.getElementById('skill-gaps-list')) {
+      renderSkillList('gap');
+      renderSkillTree();
+    } else {
+      // Wait for fragment injection
+      const observer = new MutationObserver(function(mutations, obs) {
+        if (document.getElementById('skill-gaps-list')) {
+          renderSkillList('gap');
+          renderSkillTree();
+          obs.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  })();
+</script>
+</section>
