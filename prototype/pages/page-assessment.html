@@ -1,0 +1,136 @@
+        <!-- ===== PAGE: 职业测评 (ASSESSMENT) ===== -->
+        <section id="page-assessment" class="page">
+          <div class="mb-6">
+            <div class="eyebrow mb-2">CAREER · ASSESSMENT</div>
+            <h1 class="font-display font-extrabold text-3xl text-content-text">职业测评中心</h1>
+            <p class="text-content-sub mt-2 text-[15px]">通过多维度科学测评与 AI 深度访谈，精准构建你的职业画像，让岗位匹配更懂你。</p>
+          </div>
+
+          <!-- AI Interview Hero Banner -->
+          <div id="ai-interview-hero" class="ai-hero-banner mb-6" onclick="startAIInterview()">
+            <div class="ai-hero-particles">
+              <span class="particle" style="--delay:0s;  --x:8%;  --size:6px"></span>
+              <span class="particle" style="--delay:1.2s;--x:18%; --size:4px"></span>
+              <span class="particle" style="--delay:2.4s;--x:30%; --size:7px"></span>
+              <span class="particle" style="--delay:0.6s;--x:44%; --size:5px"></span>
+              <span class="particle" style="--delay:1.8s;--x:58%; --size:8px"></span>
+              <span class="particle" style="--delay:3.0s;--x:70%; --size:4px"></span>
+              <span class="particle" style="--delay:0.3s;--x:82%; --size:6px"></span>
+              <span class="particle" style="--delay:2.0s;--x:92%; --size:5px"></span>
+              <span class="particle" style="--delay:3.6s;--x:12%; --size:4px"></span>
+              <span class="particle" style="--delay:1.5s;--x:36%; --size:5px"></span>
+              <span class="particle" style="--delay:0.9s;--x:52%; --size:6px"></span>
+              <span class="particle" style="--delay:2.7s;--x:76%; --size:7px"></span>
+            </div>
+            <div class="ai-hero-content">
+              <div class="ai-hero-left">
+                <div class="ai-hero-avatar">
+                  <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <div class="ai-hero-text">
+                  <div class="ai-hero-title">
+                    <span class="ai-hero-emoji">🎙️</span> AI 职业深度访谈
+                    <span class="ai-hero-badge">NEW</span>
+                  </div>
+                  <div class="ai-hero-sub">"聊15分钟，让我更懂你"</div>
+                </div>
+              </div>
+              <div class="ai-hero-action">
+                <span class="ai-hero-action-text">开始访谈</span>
+                <span class="ai-hero-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assessment Overview: Row 1 (Featured: MBTI + Holland) -->
+          <div id="assessment-overview" class="grid grid-cols-2 gap-5 mb-5">
+            <!-- MBTI — 推荐首测 -->
+            <div class="card card-hover card-clickable p-6 relative overflow-hidden" onclick="startAssessment('mbti')">
+              <span class="featured-badge">🌟 推荐首测</span>
+              <span id="mbti-status" class="status-badge status-pending">待测</span>
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#6D5EF6,#8B7FF8)">
+                  <i class="fa-solid fa-user-astronaut text-white text-2xl"></i>
+                </div>
+                <div class="flex-1 pt-1">
+                  <h3 class="font-display font-bold text-lg text-content-text mb-1">MBTI 人格测评</h3>
+                  <p class="text-[14px] text-content-sub leading-relaxed">16型人格经典测评，深度了解你的性格特质与行为偏好</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-3 border-t border-[var(--content-divider)]">
+                <span class="time-badge"><i class="fa-regular fa-clock"></i> 8min</span>
+                <span class="text-[12px] text-content-muted">10 道题</span>
+              </div>
+            </div>
+
+            <!-- Holland — 推荐首测 -->
+            <div class="card card-hover card-clickable p-6 relative overflow-hidden" onclick="startAssessment('holland')">
+              <span class="featured-badge">🌟 推荐首测</span>
+              <span id="holland-status" class="status-badge status-pending">待测</span>
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#0EA5B7,#38BDF8)">
+                  <i class="fa-solid fa-compass text-white text-2xl"></i>
+                </div>
+                <div class="flex-1 pt-1">
+                  <h3 class="font-display font-bold text-lg text-content-text mb-1">霍兰德职业兴趣</h3>
+                  <p class="text-[14px] text-content-sub leading-relaxed">RIASEC 模型，发现你的职业兴趣倾向与匹配领域</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-3 border-t border-[var(--content-divider)]">
+                <span class="time-badge"><i class="fa-regular fa-clock"></i> 6min</span>
+                <span class="text-[12px] text-content-muted">60 道题</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assessment Overview: Row 2 (DISC + Values) -->
+          <div class="grid grid-cols-2 gap-5 mb-6">
+            <!-- DISC -->
+            <div class="card card-hover card-clickable p-5 relative overflow-hidden" onclick="startAssessment('disc')">
+              <span id="disc-status" class="status-badge status-pending">待测</span>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#F59E0B,#FBBF24)">
+                  <i class="fa-solid fa-chart-pie text-white text-lg"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-display font-bold text-base text-content-text mb-0.5">DISC 性格测评</h3>
+                  <p class="text-[13px] text-content-sub">支配/影响/稳健/谨慎，识别你的行为风格</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-2.5 border-t border-[var(--content-divider)]">
+                <span class="time-badge"><i class="fa-regular fa-clock"></i> 5min</span>
+                <span class="text-[12px] text-content-muted">28 道题</span>
+              </div>
+            </div>
+
+            <!-- Values -->
+            <div class="card card-hover card-clickable p-5 relative overflow-hidden" onclick="startAssessment('values')">
+              <span id="values-status" class="status-badge status-pending">待测</span>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#10B981,#34D399)">
+                  <i class="fa-solid fa-heart text-white text-lg"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-display font-bold text-base text-content-text mb-0.5">职业价值观测评</h3>
+                  <p class="text-[13px] text-content-sub">探索你在职业中最看重的核心因素与动机</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-2.5 border-t border-[var(--content-divider)]">
+                <span class="time-badge"><i class="fa-regular fa-clock"></i> 4min</span>
+                <span class="text-[12px] text-content-muted">15 道题</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assessment Results -->
+          <div id="assessment-results" class="hidden">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-display font-bold text-xl text-content-text">测评报告</h2>
+              <button class="text-sm text-brand-purple font-medium hover:underline" onclick="viewFullReport()">
+                <i class="fa-solid fa-file-lines mr-1"></i>查看完整职业画像
+              </button>
+            </div>
+            <div id="results-container" class="grid grid-cols-2 gap-5">
+            </div>
+          </div>
+        </section>
