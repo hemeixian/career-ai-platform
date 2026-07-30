@@ -1,0 +1,60 @@
+  <!-- ============ HELP MODAL ============ -->
+  <div id="help-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[520px] max-w-[92vw] overflow-hidden">
+      <div class="px-6 py-4 flex items-center justify-between border-b border-content-divider">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(14,165,183,0.1)">
+            <i class="fa-regular fa-circle-question text-brand-cyan"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-content-text">帮助中心</h3>
+            <p class="text-[11px] text-content-sub">快速上手职引未来</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg hover:bg-content-divider flex items-center justify-center text-content-sub hover:text-content-text transition" onclick="closeModal('help-modal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-3">
+        <div class="rounded-xl p-4 cursor-pointer hover:border-brand-purple transition border border-content-divider" onclick="switchPage('planning'); closeModal('help-modal')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(109,94,246,0.1)">
+              <i class="fa-solid fa-compass text-brand-purple"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-sm font-semibold text-content-text">如何开始职业规划？</div>
+              <div class="text-[11px] text-content-sub mt-0.5">通过 4 步输入，AI 为你生成个性化方向</div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-content-sub text-xs"></i>
+          </div>
+        </div>
+        <div class="rounded-xl p-4 cursor-pointer hover:border-brand-purple transition border border-content-divider" onclick="switchPage('diagnosis'); closeModal('help-modal')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(14,165,183,0.1)">
+              <i class="fa-solid fa-magnifying-glass-chart text-brand-cyan"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-sm font-semibold text-content-text">技能诊断如何工作？</div>
+              <div class="text-[11px] text-content-sub mt-0.5">对比理想简历与现状，识别能力差距</div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-content-sub text-xs"></i>
+          </div>
+        </div>
+        <div class="rounded-xl p-4 cursor-pointer hover:border-brand-purple transition border border-content-divider" onclick="switchPage('tasks'); closeModal('help-modal')">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(16,185,129,0.1)">
+              <i class="fa-solid fa-list-check text-state-success"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-sm font-semibold text-content-text">任务如何提交与验证？</div>
+              <div class="text-[11px] text-content-sub mt-0.5">A 类代码 / B 类报告，AI 自动评估</div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-content-sub text-xs"></i>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 py-3 border-t border-content-divider text-center text-[11px] text-content-sub">
+        <i class="fa-solid fa-headset mr-1"></i>如需更多帮助，请联系：support@career-engine.cn
+      </div>
+    </div>
+  </div>
