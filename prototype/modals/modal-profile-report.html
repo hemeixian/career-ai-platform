@@ -1,0 +1,33 @@
+  <!-- ============ FULL CAREER PROFILE MODAL ============ -->
+  <div id="profile-report-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[820px] max-w-[96vw] max-h-[92vh] overflow-hidden flex flex-col">
+      <div class="px-7 py-5 flex items-center justify-between" style="background:linear-gradient(135deg,#6D5EF6,#0EA5B7)">
+        <div class="flex items-center gap-4">
+          <img id="profile-report-avatar" src="" class="w-12 h-12 rounded-full border-2 border-white/50" alt="" />
+          <div>
+            <h3 class="font-display font-bold text-xl text-white mb-0.5" id="profile-report-name">职业画像报告</h3>
+            <p class="text-white/80 text-sm">基于多维度测评与AI访谈生成</p>
+          </div>
+        </div>
+        <button class="w-9 h-9 rounded-lg hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white transition" onclick="closeProfileReport()">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="profile-report-content" class="flex-1 overflow-y-auto p-7">
+        <!-- Full report content will be rendered here -->
+      </div>
+
+      <div class="px-7 py-4 flex items-center justify-between border-t border-content-divider" style="background:#FAFBFC">
+        <span class="text-xs text-content-sub"><i class="fa-solid fa-lightbulb text-brand-amber mr-1"></i>该画像将用于优化岗位匹配、学习路径推荐等服务</span>
+        <div class="flex gap-3">
+          <button class="btn-ghost px-4 py-2 rounded-lg text-sm" onclick="closeProfileReport()">
+            关闭
+          </button>
+          <button class="btn-primary px-5 py-2 rounded-lg text-sm" onclick="showToast('画像已更新到系统','check')">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i>应用到推荐
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
