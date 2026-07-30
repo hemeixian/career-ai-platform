@@ -1,0 +1,192 @@
+<!-- ===== PAGE: 个人中心 (PROFILE) ===== -->
+        <section id="page-profile" class="page">
+          <div class="mb-6">
+            <div class="eyebrow mb-2">PERSONAL · CENTER</div>
+            <h1 class="font-display font-extrabold text-3xl text-content-text">个人中心</h1>
+            <p class="text-content-sub mt-2 text-[15px]">维护你的个人信息与目标岗位，AI 将基于此持续优化推荐与诊断。</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-5">
+            <!-- ===== LEFT COLUMN: Avatar + Basic Info ===== -->
+            <div class="col-span-1 space-y-5">
+              <!-- Profile Card -->
+              <div class="card p-6 text-center glass-card">
+                <div class="relative inline-block mb-4">
+                  <div id="profile-avatar-uploader" class="avatar-circle-large">
+                    <img id="profile-avatar-img" class="avatar-circle-img" alt="用户头像" />
+                    <div class="avatar-circle-placeholder" id="profile-avatar-placeholder">
+                      <span id="profile-avatar-initials">ZM</span>
+                    </div>
+                  </div>
+                  <div id="profile-avatar-camera" class="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-brand-purple flex items-center justify-center cursor-pointer hover:bg-brand-primary-hover transition shadow-lg border-2 border-white avatar-camera-btn">
+                    <i class="fa-solid fa-camera text-white text-sm"></i>
+                  </div>
+                  <input type="file" id="profile-avatar-file" accept="image/jpeg,image/png,image/webp" style="display:none" />
+                </div>
+                <h3 id="profile-name" class="font-display font-bold text-xl text-content-text">张明</h3>
+                <p id="profile-meta" class="text-sm text-content-sub mt-1">计算机科学 · 大三</p>
+                <div class="flex justify-center gap-2 mt-3">
+                  <span id="profile-target-badge" class="badge badge-purple">目标：前端开发</span>
+                </div>
+
+                <div class="mt-5 pt-4 border-t border-content-divider space-y-3 text-left">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-content-sub"><i class="fa-solid fa-envelope w-4 text-brand-purple mr-1.5"></i>邮箱</span>
+                    <span id="profile-email" class="text-content-text font-medium">zhang***@edu.cn</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-content-sub"><i class="fa-solid fa-calendar w-4 text-brand-purple mr-1.5"></i>注册时间</span>
+                    <span id="profile-registration-date" class="text-content-text font-medium">--</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-content-sub"><i class="fa-solid fa-fire w-4 text-brand-cyan mr-1.5"></i>连续学习</span>
+                    <span id="profile-learning-days" class="text-content-text font-medium">0 天</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edit Form -->
+              <div class="card p-6">
+                <h3 class="font-display font-bold text-sm text-content-text mb-4">编辑个人信息</h3>
+                <div class="space-y-3.5">
+                  <div>
+                    <label class="block text-[12px] font-semibold mb-1.5 text-content-text">用户名</label>
+                    <input id="form-username" type="text" class="input" value="张明" />
+                  </div>
+                  <div>
+                    <label class="block text-[12px] font-semibold mb-1.5 text-content-text">邮箱</label>
+                    <input id="form-email" type="email" class="input" value="zhangming@edu.cn" />
+                  </div>
+                  <div>
+                    <label class="block text-[12px] font-semibold mb-1.5 text-content-text">学校</label>
+                    <div id="profile-school-search" data-school-search data-placeholder="输入或选择学校名称"></div>
+                    <input id="form-school" type="hidden" value="某某科技大学" />
+                  </div>
+                  <div>
+                    <label class="block text-[12px] font-semibold mb-1.5 text-content-text">专业</label>
+                    <div id="profile-major-search" data-major-search data-placeholder="输入或选择专业名称"></div>
+                    <input id="form-major" type="hidden" value="计算机科学与技术" />
+                  </div>
+                  <div>
+                    <label class="block text-[12px] font-semibold mb-1.5 text-content-text">年级</label>
+                    <div id="profile-grade-selector" data-unified-select 
+                         data-placeholder="请选择年级" 
+                         data-options="grades"
+                         data-value="大三"></div>
+                    <input id="form-grade" type="hidden" value="大三" />
+                  </div>
+                  <div>
+                    <label class="block text-[12px] font-semibold mb-1.5 text-content-text">目标岗位</label>
+                    <div id="target-selector" data-unified-select 
+                         data-placeholder="请选择目标岗位" 
+                         data-options="positions"
+                         data-searchable="true"
+                         data-show-custom="true"
+                         data-custom-placeholder="输入自定义岗位"
+                         data-value="前端开发工程师"></div>
+                    <input id="form-target" type="hidden" value="前端开发工程师" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== MIDDLE COLUMN: Core Data Cards + Heatmap ===== -->
+            <div class="col-span-1 space-y-5">
+              <!-- Core Data Cards -->
+              <div class="grid grid-cols-3 gap-3">
+                <div class="card p-4 text-center relative overflow-hidden">
+                  <div class="absolute -top-2 -right-2 w-14 h-14 rounded-full opacity-15" style="background:#0ea5b7"></div>
+                  <div class="relative">
+                    <div class="text-[11px] text-content-sub font-semibold tracking-wide mb-1">连续学习</div>
+                    <div id="profile-stat-days" class="font-display font-extrabold text-3xl text-brand-cyan">0</div>
+                    <div class="text-[11px] text-content-sub mt-0.5">天 · 🔥</div>
+                  </div>
+                </div>
+                <div class="card p-4 text-center relative overflow-hidden">
+                  <div class="absolute -top-2 -right-2 w-14 h-14 rounded-full opacity-15" style="background:#6d5ef6"></div>
+                  <div class="relative">
+                    <div class="text-[11px] text-content-sub font-semibold tracking-wide mb-1">完成任务</div>
+                    <div id="profile-stat-tasks" class="font-display font-extrabold text-3xl text-brand-purple">0</div>
+                    <div class="text-[11px] text-content-sub mt-0.5">项 · ✅</div>
+                  </div>
+                </div>
+                <div class="card p-4 text-center relative overflow-hidden">
+                  <div class="absolute -top-2 -right-2 w-14 h-14 rounded-full opacity-15" style="background:#10b981"></div>
+                  <div class="relative">
+                    <div class="text-[11px] text-content-sub font-semibold tracking-wide mb-1">匹配度</div>
+                    <div id="profile-stat-match" class="font-display font-extrabold text-3xl text-state-success">0</div>
+                    <div class="text-[11px] text-content-sub mt-0.5">% · 🎯</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- GitHub-style Heatmap for learning activity -->
+              <div class="card p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="font-display font-bold text-sm text-content-text flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-brand-cyan text-xs"></i> 学习活跃度
+                  </h3>
+                  <span class="text-[11px] text-content-sub">最近 12 周</span>
+                </div>
+                <div class="heatmap-grid" id="profile-heatmap">
+                  <!-- 53 weeks x 7 days grid, populated by JS -->
+                </div>
+                <div class="heatmap-legend">
+                  <span>少</span>
+                  <div class="heatmap-legend-cell" data-level="0" style="background:#ebedf0"></div>
+                  <div class="heatmap-legend-cell" data-level="1" style="background:#c6e48b"></div>
+                  <div class="heatmap-legend-cell" data-level="2" style="background:#7bc96f"></div>
+                  <div class="heatmap-legend-cell" data-level="3" style="background:#239a3b"></div>
+                  <div class="heatmap-legend-cell" data-level="4" style="background:#196127"></div>
+                  <span>多</span>
+                </div>
+                <div class="mt-3 p-3 rounded-lg" style="background:rgba(14,165,183,0.06);border:1px solid rgba(14,165,183,0.15)">
+                  <div class="flex items-center justify-between text-[12px]">
+                    <span id="profile-heatmap-text" class="text-content-sub">暂无学习记录，开始第一个任务吧！</span>
+                    <span id="profile-heatmap-count" class="font-display font-bold text-brand-cyan">0/12</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bio -->
+              <div class="card p-5">
+                <h3 class="font-display font-bold text-sm text-content-text mb-3">个人简介</h3>
+                <textarea id="form-bio" class="input" rows="4" maxlength="200">热爱前端工程，熟悉 React 生态，正在系统补齐 TypeScript 与工程化能力，希望毕业后进入互联网大厂从事前端开发。</textarea>
+                <div class="mt-2 text-[11px] text-content-sub flex items-center justify-between">
+                  <span>AI 将基于你的简介优化岗位推荐与面试题</span>
+                  <span id="bio-count" class="char-counter">0/200</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== RIGHT COLUMN: Interest Tag Cloud ===== -->
+            <div class="col-span-1 space-y-5">
+              <!-- Interest Tags -->
+              <div class="card p-5">
+                <h3 class="font-display font-bold text-sm text-content-text mb-4 flex items-center gap-2">
+                  <i class="fa-solid fa-tags text-brand-purple text-xs"></i> 兴趣标签
+                </h3>
+                <div id="interest-tag-selector" class="mb-5"></div>
+
+                <!-- Tag Progress Bars (dynamically rendered) -->
+                <div class="space-y-3 pt-4 border-t border-content-divider">
+                  <div class="text-[12px] font-semibold text-content-text mb-2">各标签掌握度</div>
+                  <div id="profile-skill-bars" class="space-y-3">
+                    <!-- Dynamically populated by JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Goal Card (dynamically rendered) -->
+              <div id="profile-goal-card" class="card p-5" style="background:linear-gradient(135deg,rgba(109,94,246,0.06),rgba(14,165,183,0.04));border:1px solid rgba(109,94,246,0.2)">
+                <!-- Dynamically populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-end mt-6" style="gap:16px">
+            <button class="btn-ghost px-5 py-2.5 rounded-lg text-sm" onclick="resetProfile()">取消</button>
+            <button class="btn-primary px-5 py-2.5 rounded-lg text-sm" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk mr-1.5 text-xs"></i>保存修改</button>
+          </div>
+        </section>
