@@ -1,0 +1,24 @@
+  <!-- ============ TASK DETAIL MODAL ============ -->
+  <div id="task-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[640px] max-w-[92vw] max-h-[88vh] overflow-y-auto">
+      <div class="px-6 py-4 flex items-center justify-between border-b border-content-divider sticky top-0 bg-white z-10">
+        <div class="flex items-center gap-3">
+          <div id="task-modal-icon" class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(109,94,246,0.1)">
+            <i class="fa-solid fa-code text-brand-purple"></i>
+          </div>
+          <div>
+            <h3 id="task-modal-title" class="font-display font-bold text-base text-content-text">任务详情</h3>
+            <p id="task-modal-sub" class="text-[11px] text-content-sub">任务描述与要求</p>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-lg hover:bg-content-divider flex items-center justify-center text-content-sub hover:text-content-text transition" onclick="closeTaskDetail()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="task-modal-body" class="p-6 space-y-4"></div>
+      <div class="px-6 py-4 flex items-center justify-end gap-2 border-t border-content-divider sticky bottom-0 bg-white" style="background:#FAFBFC">
+        <button class="btn-ghost px-4 py-2 rounded-lg text-sm" onclick="closeTaskDetail()">关闭</button>
+        <button id="task-modal-action" class="btn-primary px-4 py-2 rounded-lg text-sm"><i class="fa-solid fa-upload mr-1.5 text-xs"></i>提交成果物</button>
+      </div>
+    </div>
+  </div>
