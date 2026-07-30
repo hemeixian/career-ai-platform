@@ -1,0 +1,16 @@
+  <!-- ============ CONFIRM MODAL ============ -->
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal-card bg-white rounded-modal w-[400px] max-w-[92vw] overflow-hidden">
+      <div class="p-6 text-center">
+        <div id="confirm-icon" class="w-14 h-14 rounded-full mx-auto flex items-center justify-center mb-4" style="background:rgba(244,63,94,0.1)">
+          <i class="fa-solid fa-triangle-exclamation text-state-danger text-xl"></i>
+        </div>
+        <h3 id="confirm-title" class="font-display font-bold text-lg text-content-text mb-2">确认操作</h3>
+        <p id="confirm-msg" class="text-sm text-content-sub">是否继续？</p>
+      </div>
+      <div class="px-6 py-4 flex gap-3 border-t border-content-divider" style="background:#FAFBFC">
+        <button class="btn-ghost flex-1 py-2.5 rounded-lg text-sm" onclick="closeModal('confirm-modal')">取消</button>
+        <button id="confirm-ok" class="btn-primary flex-1 py-2.5 rounded-lg text-sm">确定</button>
+      </div>
+    </div>
+  </div>
